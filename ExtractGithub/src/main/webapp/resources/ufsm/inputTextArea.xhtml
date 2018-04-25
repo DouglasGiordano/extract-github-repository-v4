@@ -1,0 +1,41 @@
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+    <composite:interface >
+        <composite:attribute name="id"/>
+        <composite:attribute name="name" />
+        <composite:attribute name="placeholder" default=" " />
+        <composite:attribute name="value" />
+        <composite:attribute name="required"  />
+        <composite:attribute name="requiredMessage"  />
+        <composite:attribute name="tabindex" />
+        <composite:attribute name="sizeField" default="col-md-12"/>
+        <composite:attribute name="cols"/>
+        <composite:attribute name="rows" default="6" required="true"/>
+        <composite:attribute name="readonly" default="false"/>
+                <composite:clientBehavior name="change" event="change" targets="#{cc.attrs.id}:#{cc.attrs.id}"/>
+    </composite:interface>
+
+
+    <composite:implementation >
+        <div class="#{cc.attrs.sizeField}">
+            <div class="form-group">
+                <p:outputLabel value="#{cc.attrs.name}" for="#{cc.attrs.id}:#{cc.attrs.id}" />
+                <h:inputTextarea tabindex="#{cc.attrs.tabindex}"
+                                 class="form-control"
+                                 required="#{cc.attrs.required}" id="#{cc.attrs.id}"
+                                 value="#{cc.attrs.value}" 
+                                 requiredMessage="#{cc.attrs.requiredMessage}"
+                                 cols="#{cc.attrs.cols}"
+                                 rows="#{cc.attrs.rows}"
+                                 readonly="#{cc.attrs.readonly}"/>
+                <h:message for="#{cc.attrs.id}:#{cc.attrs.id}" class="help-block with-errors label label-danger" />
+            </div>
+        </div>
+        <script>
+                $('##{cc.attrs.id}').summernote();
+        </script>
+    </composite:implementation>
+</html>

@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+    <composite:attribute name="title" default=""/>
+    <composite:attribute name="size" default="col-lg-6"/>
+    <composite:facet name="body" required="true"/>
+</composite:interface>
+
+
+<composite:implementation>
+        <div class="#{cc.attrs.size}">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <h4>#{cc.attrs.title}</h4>
+                </div>
+                <div class="card-body">
+                    <composite:renderFacet name="body"/>
+                    <composite:insertChildren></composite:insertChildren>
+                </div>
+            </div>
+        </div>
+</composite:implementation>
+</html>

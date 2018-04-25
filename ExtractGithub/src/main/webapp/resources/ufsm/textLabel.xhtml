@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+    <composite:attribute name="title" default=""/>
+    <composite:attribute name="text" default=""/>
+    <composite:attribute name="size" default="col-lg-4"/>
+</composite:interface>
+
+
+<composite:implementation>
+    <div class="#{cc.attrs.size}">
+        <div class="title"><strong>#{cc.attrs.title}</strong>
+            <p>#{cc.attrs.text}</p>
+        </div>
+        <composite:insertChildren></composite:insertChildren>
+    </div>
+
+</composite:implementation>
+</html>

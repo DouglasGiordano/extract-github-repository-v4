@@ -1,0 +1,20 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+    <composite:attribute name="background" default="white"/>
+</composite:interface>
+
+
+<composite:implementation>
+    <section class="dashboard-header"  style="background: #{cc.attrs.background}; color: white; margin-bottom: 0px; margin-top: 0px">
+        <div class="container-fluid">
+            <div class="col-lg-12 col-md-12">
+                <composite:insertChildren></composite:insertChildren>
+            </div>
+        </div>
+    </section>
+</composite:implementation>
+</html>

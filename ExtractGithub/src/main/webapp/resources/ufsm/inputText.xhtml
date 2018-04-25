@@ -1,0 +1,45 @@
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+    <composite:interface >
+        <composite:attribute name="id"/>
+        <composite:attribute name="name" default="" />
+        <composite:attribute name="placeholder" default=" " />
+        <composite:attribute name="value" />
+        <composite:attribute name="attribute" required="false"/>
+        <composite:attribute name="entity"  required="false"/>
+        <composite:attribute name="required"  />
+        <composite:attribute name="requiredMessage" default="Campo #{cc.attrs.name} obrigatório" />
+        <composite:attribute name="tabindex" />
+        <composite:attribute name="sizeField" default="col-md-12"/>
+        <composite:attribute name="type" default="text"/>
+        <composite:attribute name="readonly" default="false"/>
+        <composite:attribute name="maxlength" />
+        
+        <composite:clientBehavior name="blur" event="blur" targets="#{cc.attrs.id}:#{cc.attrs.id}"/>
+    </composite:interface>
+
+
+    <composite:implementation >
+        <div class="#{cc.attrs.sizeField}">
+            <div class="form-group">
+                <p:outputLabel value="#{cc.attrs.name}" for="#{cc.attrs.id}:#{cc.attrs.id}" />
+                <h:inputText tabindex="#{cc.attrs.tabindex}"
+                             placeholder="#{cc.attrs.placeholder}"
+                             class="form-control"
+                             required="#{cc.attrs.required}"
+                             id="#{cc.attrs.id}"
+                             maxlength="#{cc.attrs.maxlength}"
+                             value="#{cc.attrs.value}" 
+                             autocomplete="off"
+                             requiredMessage="#{cc.attrs.requiredMessage}"
+                             type="#{cc.attrs.type}"
+                             readonly="#{cc.attrs.readonly}">
+                </h:inputText>
+                <h:message for="#{cc.attrs.id}:#{cc.attrs.id}" class="help-block with-errors label label-danger" />
+            </div>
+        </div>
+    </composite:implementation>
+</html>

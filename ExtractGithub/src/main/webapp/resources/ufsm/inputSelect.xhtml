@@ -1,0 +1,78 @@
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <composite:interface >
+        <composite:attribute name="id"/>
+        <composite:attribute name="name" />
+        <composite:attribute name="placeholder" default=" " />
+        <composite:attribute name="required" default="#{cc.attrs.entity.getRequired(cc.attrs.attribute)}" />
+        <composite:attribute name="requiredMessage" default="Campo #{cc.attrs.name} obrigatório" />
+        <composite:attribute name="value" />
+        <composite:attribute name="tabindex" />
+        <composite:attribute name="sizeField" default="col-md-4"/>
+        <composite:attribute name="nameSearch" default="#{type}" />
+        <composite:attribute name="listSearch"/>
+        <composite:attribute name="liveSearch" default="false" shortDescription="Habilita pesquisa no select"/>
+        <composite:attribute name="subtext"/>
+        <composite:attribute name="viewMax" default="5"/>
+        <composite:attribute name="readonly" default="false"/>
+        <composite:attribute name="converter" default=""/>
+        <composite:attribute name="immediate" default="false" />
+        <composite:attribute name="refresh" default="false" />
+        <composite:attribute name="refreshMethod" method-signature="void refreshList()" />
+        <composite:clientBehavior name="change" event="change" targets="#{cc.attrs.id}:#{cc.attrs.id}"/>
+        <composite:clientBehavior name="itemSelect" event="itemSelect" targets="#{cc.attrs.id}:#{cc.attrs.id}"/>
+    </composite:interface>
+
+
+    <composite:implementation >
+        <h:panelGroup id="#{cc.attrs.id}Panel" layout="block" >
+            <div class="#{cc.attrs.sizeField}" >
+                <div class="form-group">
+                    <p:outputLabel value="#{cc.attrs.name}" for="#{cc.attrs.id}:#{cc.attrs.id}" />
+
+                    <h:commandLink id="#{cc.attrs.id}btnRefresh"
+                                     immediate="true"
+                                     rendered="#{cc.attrs.refresh}" 
+                                     actionListener="#{cc.attrs.refreshMethod}"
+                                     style="color: green; float: right;">
+                        <f:ajax render="#{cc.attrs.id}Panel" />
+                        <i class="fa fa-refresh"></i>
+                    </h:commandLink>
+                    <p:tooltip for="#{cc.attrs.id}btnRefresh" value="Atualizar #{cc.attrs.name}" trackMouse="true" />
+
+                    <h:selectOneMenu value="#{cc.attrs.value}"
+                                     id="#{cc.attrs.id}" immediate="#{cc.attrs.immediate}"
+                                     readonly="#{cc.attrs.readonly}"
+                                     tabindex="#{cc.attrs.tabindex}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     required="#{cc.attrs.required}"
+                                     requiredMessage="#{cc.attrs.requiredMessage}"
+                                     class="selectpicker"
+                                     >
+                        <f:passThroughAttribute name="data-live-search" value="#{cc.attrs.liveSearch}" />
+                        <f:passThroughAttribute name="data-width" value="100%" />
+                        <c:if test="#{cc.attrs.readonly}">
+                            <f:passThroughAttribute name="disabled" value="#{cc.attrs.readonly}" />
+                        </c:if>
+                        <f:passThroughAttribute name="data-subtext" value="#{cc.attrs.subtext}" />
+                        <f:passThroughAttribute name="data-size" value="#{cc.attrs.viewMax}" />
+                        <f:selectItem itemValue="#{null}" itemLabel="Nenhum Registro"/>
+                        <f:selectItems value="#{cc.attrs.listSearch}" var="type"
+                                       itemLabel="#{cc.attrs.nameSearch}" itemValue="#{type}" />
+                    </h:selectOneMenu>
+
+                    <h:message for="#{cc.attrs.id}:#{cc.attrs.id}" class="help-block with-errors label label-danger" />
+                </div>
+            </div>
+            <script>
+                $('.selectpicker').selectpicker('render');
+            </script>
+        </h:panelGroup>
+    </composite:implementation>
+
+</html>
