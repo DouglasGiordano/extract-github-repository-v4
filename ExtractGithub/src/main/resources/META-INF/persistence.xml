@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+             version="2.2">
+    <persistence-unit name="ExtractGitHub" transaction-type="JTA">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <jta-data-source>jdbc/extractgithubds</jta-data-source>
+        <class>br.edu.ufsm.model.Project</class>
+        <class>br.edu.ufsm.model.User</class>
+        <class>br.edu.ufsm.model.CommitFile</class>
+        <class>br.edu.ufsm.model.CommitStats</class>
+        <class>br.edu.ufsm.model.CommitUser</class>
+        <class>br.edu.ufsm.model.Commit</class>
+        <class>br.edu.ufsm.model.Issue</class>
+        <class>br.edu.ufsm.model.PullRequest</class>
+        <class>br.edu.ufsm.model.PullRequestMarker</class>
+        <class>br.edu.ufsm.model.Milestone</class>
+        <class>br.edu.ufsm.model.GoogleGroup</class>
+        <class>br.edu.ufsm.model.GoogleGroupMessage</class>
+        <class>br.edu.ufsm.model.GoogleGroupTopic</class>
+        <class>br.edu.ufsm.model.GoogleGroupUser</class>
+        <shared-cache-mode>ALL</shared-cache-mode>
+        <properties>
+            <property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
+            <property name="eclipselink.ddl-generation.output-mode" value="database" />
+            <!--<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>-->
+            <!--<property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>-->
+            <!--<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform" />-->
+            <!--<property name="hibernate.hbm2ddl.auto" value="update"/>-->
+            <!--<property name="hibernate.event.merge.entity_copy_observer" value="allow"/>-->
+            <!--<property name="hibernate.connection.characterEncoding" value="utf8"/>-->
+            <!--<property name="hibernate.connection.useUnicode" value="true"/>-->
+            <!--<property name="hibernate.connection.charSet" value="utf8_general_ci"/>-->
+            <!--<property name="eclipselink.logging.level" value="FINE"/>-->
+            <property name="javax.persistence.query.timeout" value="1000000"/>
+        </properties>
+    </persistence-unit>
+</persistence>

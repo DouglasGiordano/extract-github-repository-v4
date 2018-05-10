@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="template.xhtml"
+>
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="body">
+        <h:commandButton value="Update Users" style="margin-top: 1%"
+                         class="btn btn-outline-info" immediate="true" actionListener="#{usuarioMBean.atualizarUsuarios()}">
+            <f:ajax execute="@form" render="@form"/>
+        </h:commandButton>
+        <br/>
+        <br/>
+        <h:dataTable id="tbl" value="#{usuarioMBean.users}" var="o" class="table"
+                     >
+
+            <h:column>
+                <!-- column header -->
+                <f:facet name="header">ID</f:facet>
+                <!-- row record -->
+                #{o.id}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Login</f:facet>
+                    #{o.login}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                    #{o.name}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">URL</f:facet>
+                    #{o.url}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Created At</f:facet>
+                #{o.createdAt}
+            </h:column>
+        </h:dataTable>
+        <script type="text/javascript" charset="utf-8">
+            $(document).ready(function() {
+                $('#form\\:tbl').dataTable();
+            } );
+        </script>
+    </ui:define>
+
+</ui:composition>
+

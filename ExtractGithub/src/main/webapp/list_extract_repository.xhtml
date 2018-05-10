@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core"
+                template="template.xhtml"
+                xmlns:ufsm="http://xmlns.jcp.org/jsf/composite/ufsm">
+    <ui:define name="head">
+        <div class="breadcrumb-holder">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item active">Extract List Repositories</li>
+                </ul>
+            </div>
+        </div>
+    </ui:define>
+    <ui:define name="title">
+
+    </ui:define>
+
+    <ui:define name="body">
+        <ufsm:inputTextArea id="projects" rows="20"
+                            name="Projetos" required="true"
+                            value="#{extractrepositoriesmbean.list}"
+                            rendered="#{empty extractrepositoriesmbean.projects}"/>
+        <h:commandButton value="Get Repositories"
+                         class="btn btn-outline-warning   btn-block"
+                         action="#{extractrepositoriesmbean.extractRepositories()}"
+                         rendered="#{empty extractrepositoriesmbean.projects}"
+        >
+            <f:ajax execute="form:projects"
+                    render="form" />
+        </h:commandButton>
+        <h:dataTable id="tbl" value="#{extractrepositoriesmbean.projects}" var="o" styleClass="table"
+                     rendered="#{not empty extractrepositoriesmbean.projects}"
+        >
+
+            <h:column>
+                <!-- column header -->
+                <f:facet name="header">Owner</f:facet>
+                <!-- row record -->
+                #{o.owner.login}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                #{o.name}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">URL</f:facet>
+                #{o.url}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Status</f:facet>
+                <h:panelGroup  id="status">
+                    #{extractrepositoriesmbean.getMessageStatus(o)}
+                    <h:panelGroup rendered="#{extractrepositoriesmbean.getMessageStatus(o) != 'Completed' and extractrepositoriesmbean.getMessageStatus(o) != 'Waiting'}">
+                        <i class="fa fa-spinner fa-spin" style="color: #33b35a;"></i>
+                    </h:panelGroup>
+                    <h:panelGroup rendered="#{extractrepositoriesmbean.getMessageStatus(o) == 'Completed'}">
+                        <i class="fa fa-check" style="color: #33b35a;"></i>
+                    </h:panelGroup>
+                    <h:panelGroup rendered="#{extractrepositoriesmbean.getMessageStatus(o) == 'Waiting'}">
+                        <i class="fa fa-archive"  style="color: #33b35a;"></i>
+                    </h:panelGroup>
+                </h:panelGroup>
+            </h:column>
+        </h:dataTable>
+        <h:panelGroup id="panelPoll" rendered="#{not empty extractrepositoriesmbean.projects}">
+            <p:poll id="poll" interval="1" listener="#{extractrepositoriesmbean.checkStatus}"/>
+        </h:panelGroup>
+        <h:commandButton value="Get Issues"
+                         class="btn btn-outline-warning   btn-block"
+                         action="#{extractrepositoriesmbean.extract()}"
+                         onclick=""
+                         rendered="#{not empty extractrepositoriesmbean.projects}"
+        >
+        </h:commandButton>
+        <script type="text/javascript" charset="utf-8">
+            $(document).ready(function() {
+                $('#form\\:tbl').dataTable();
+            } );
+        </script>
+        <!--<p:ajaxStatus id="ajaxStatusPanel" onstart="PF('poll').start();-->
+                            <!--$('#dialogProgress').modal('show');"-->
+                      <!--oncomplete="$('#dialogProgress').modal('hide');PF('poll').stop();"/>-->
+    </ui:define>
+    <ui:define name="modal">
+
+    </ui:define>
+</ui:composition>

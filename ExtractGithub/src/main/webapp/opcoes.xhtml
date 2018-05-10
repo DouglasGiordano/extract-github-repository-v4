@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="template.xhtml"
+                xmlns:ufsm="http://xmlns.jcp.org/jsf/composite/ufsm">
+    <ui:define name="title">
+        Extract Github
+    </ui:define>
+
+    <ui:define name="body">
+
+
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="" id="loadingGlobal"></div>
+                <h:commandButton value="Acessar Repositórios" style="margin-right: 1%" immediate="true" class="btn btn-warning" action="/repository.jsf" >
+                </h:commandButton>
+                <p:ajaxStatus onstart="document.getElementById('loadingGlobal').classList.add('loading');" 
+                              onsuccess="document.getElementById('loadingGlobal').classList.remove('loading');" />
+                <p:messages globalOnly="true" autoUpdate="true"></p:messages>
+                <div class="post-preview">
+                    <ufsm:inputText tabindex="1"
+                                    placeholder="Usuário"
+                                    required="true"
+                                    id="inputUsuario"
+                                    maxlength="25"
+                                    name="Usuário"
+                                    sizeField="col-md-12"
+                                    value="#{extrairMBean.user}">
+                    </ufsm:inputText>
+                    <ufsm:inputSenha tabindex="2"
+                                     placeholder="Senha"
+                                     required="true"
+                                     id="inputSenha"
+                                     maxlength="25"
+                                     name="Senha"
+                                     sizeField="col-md-12"
+                                     value="#{extrairMBean.senha}">
+                    </ufsm:inputSenha>
+                    <hr/>
+
+
+                    <hr/>
+                </div>
+                <div class="post-preview">
+                    <ufsm:inputText tabindex="3"
+                                    placeholder="Proprietario Repositório"
+                                    required="true"
+                                    id="inputProp"
+                                    maxlength="40"
+                                    name="Proprietario Repositório"
+                                    sizeField="col-md-12"
+                                    value="#{extrairMBean.proprietario}">
+                    </ufsm:inputText>
+                    <ufsm:inputText tabindex="4"
+                                    placeholder="Nome Repositório"
+                                    required="true"
+                                    id="inputRepos"
+                                    maxlength="40"
+                                    name="Nome Repositório"
+                                    sizeField="col-md-12"
+                                    value="#{extrairMBean.repository}">
+                    </ufsm:inputText>
+                </div>
+                <div class="post-preview">
+                    <ufsm:inputTextArea name="Rede Temporal" rows="10" sizeField="col-md-12" id="redeTemporal" value="#{extrairMBean.redeGeradaBanco}">
+
+                    </ufsm:inputTextArea>
+                </div>
+                <div class="post-preview">
+                    <h:commandButton value="Extrair Commit" style="margin-right: 1%" class="btn btn-warning" actionListener="#{extrairMBean.extrairCommit()}" >
+                        <f:ajax execute="@form" rendered="@form"/>
+                    </h:commandButton>
+                    <h:commandButton value="Extrair Arquivos Commit" style="margin-right: 1%" class="btn btn-warning" actionListener="#{extrairMBean.extrairFilesCommit()}" >
+                        <f:ajax execute="@form" rendered="@form"/>
+                    </h:commandButton>
+                    <hr/>
+                    <h:commandButton value="Extrair Issue" style="margin-right: 1%" class="btn btn-warning" actionListener="#{extrairMBean.extrairIssue()}" >
+                        <f:ajax execute="@form" rendered="@form"/>
+                    </h:commandButton>
+                    <h:commandButton value="Extrair Comentários Issue" style="margin-right: 1%" class="btn btn-warning" actionListener="#{extrairMBean.extrairIssueComment()}" >
+                        <f:ajax execute="@form" rendered="@form"/>
+                    </h:commandButton>
+                </div>
+                <hr/>
+                <div class="post-preview">
+                    <h:commandButton value="Gerar Rede Temporal" style="margin-right: 1%" class="btn btn-warning"  actionListener="#{extrairMBean.gerarNetwork()}" >
+
+                    </h:commandButton>
+                    <h:commandButton value="Gerar Rede Issue" style="margin-right: 1%" class="btn btn-warning"  actionListener="#{extrairMBean.gerarNetworkIssue()}" >
+
+                    </h:commandButton>
+                </div>
+
+                <hr/>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
+

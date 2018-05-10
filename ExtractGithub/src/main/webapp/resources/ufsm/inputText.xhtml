@@ -27,7 +27,6 @@
             <div class="form-group">
                 <p:outputLabel value="#{cc.attrs.name}" for="#{cc.attrs.id}:#{cc.attrs.id}" />
                 <h:inputText tabindex="#{cc.attrs.tabindex}"
-                             placeholder="#{cc.attrs.placeholder}"
                              class="form-control"
                              required="#{cc.attrs.required}"
                              id="#{cc.attrs.id}"
@@ -35,7 +34,6 @@
                              value="#{cc.attrs.value}" 
                              autocomplete="off"
                              requiredMessage="#{cc.attrs.requiredMessage}"
-                             type="#{cc.attrs.type}"
                              readonly="#{cc.attrs.readonly}">
                 </h:inputText>
                 <h:message for="#{cc.attrs.id}:#{cc.attrs.id}" class="help-block with-errors label label-danger" />

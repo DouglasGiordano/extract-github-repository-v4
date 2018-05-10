@@ -1,0 +1,30 @@
+<pretty-config xmlns="http://ocpsoft.org/schema/rewrite-config-prettyfaces"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces
+                      http://ocpsoft.org/xml/ns/prettyfaces/rewrite-config-prettyfaces.xsd">
+
+    <url-mapping id="repository-view">
+        <pattern value="/repository/#{ id: repositorioextracaobean.id }" />
+        <view-id value="/faces/repository.xhtml" />
+        <action> #{repositorioextracaobean.load()}</action >
+    </url-mapping>
+    <url-mapping id="repository-list">
+        <pattern value="/repositories/extract" />
+        <view-id value="/faces/list_extract_repository.xhtml" />
+    </url-mapping>
+
+    <url-mapping id="user-view">
+        <pattern value="/user" />
+        <view-id value="/faces/user.xhtml" />
+    </url-mapping>
+
+    <url-mapping id="settings-view">
+        <pattern value="/settings" />
+        <view-id value="/faces/settings.xhtml" />
+    </url-mapping>
+
+    <url-mapping id="home-view">
+        <pattern value="/home" />
+        <view-id value="/faces/index.xhtml" />
+    </url-mapping>
+</pretty-config>

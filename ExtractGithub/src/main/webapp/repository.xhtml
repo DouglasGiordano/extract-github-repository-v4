@@ -1,0 +1,272 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="template.xhtml"
+                xmlns:ufsm="http://xmlns.jcp.org/jsf/composite/ufsm">
+    <ui:define name="head">
+        <section class="dashboard-counts section-padding">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- Count item widget-->
+                    <div class="col-xl-3 col-md-5 col-6">
+                        <div class="wrapper count-title d-flex">
+                            <div class="icon"><i class="fa fa-archive"></i></div>
+                            <div class="name"><strong
+                                    class="text-uppercase">Commits</strong><span>Extract</span>
+                                <div class="count-number">#{repositorioextracaobean.countCommit}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Count item widget-->
+                    <div class="col-xl-3 col-md-5 col-6">
+                        <div class="wrapper count-title d-flex">
+                            <div class="icon"><i class="fa fa-clone"></i></div>
+                            <div class="name"><strong
+                                    class="text-uppercase">Issues</strong><span>Extract</span>
+                                <div class="count-number">#{repositorioextracaobean.countIssue}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Count item widget-->
+                    <div class="col-xl-3 col-md-5 col-6">
+                        <div class="wrapper count-title d-flex">
+                            <div class="icon"><i class="fa fa-book"></i></div>
+                            <div class="name"><strong
+                                    class="text-uppercase">Pull Requests</strong><span>Extract</span>
+                                <div class="count-number">#{repositorioextracaobean.countPullRequest}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Count item widget-->
+                    <div class="col-xl-3 col-md-5 col-6">
+                        <div class="wrapper count-title d-flex">
+                            <div class="icon"><i class="fa fa-comment"></i></div>
+                            <div class="name"><strong
+                                    class="text-uppercase">Google Groups</strong><span>Extract</span>
+                                <div class="count-number">#{repositorioextracaobean.countGroup}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="breadcrumb-holder">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item active">Repository</li>
+                </ul>
+            </div>
+        </div>
+        <ufsm:section background="#17a2b8">
+            <div class="jumbotron jumbotron-fluid text-center" style="background: #17a2b8">
+                <h1>#{repositorioextracaobean.project.name}</h1>
+                <p style="color: white">#{repositorioextracaobean.project.description}</p>
+            </div>
+        </ufsm:section>
+    </ui:define>
+    <ui:define name="title">
+
+    </ui:define>
+
+    <ui:define name="body">
+        <ufsm:card title="Info" size="col-lg-12">
+            <div class="row d-flex">
+                <ufsm:textLabel title="ID" text="#{repositorioextracaobean.project.id}"></ufsm:textLabel>
+                <ufsm:textLabel title="Login"
+                                text="#{repositorioextracaobean.project.owner.login}"></ufsm:textLabel>
+                <ufsm:textLabel title="URL" text="#{repositorioextracaobean.project.cloneUrl}"></ufsm:textLabel>
+                <ufsm:textLabel title="Home Page" text="#{repositorioextracaobean.project.homepage}"></ufsm:textLabel>
+                <ufsm:textLabel title="Created At" text="#{repositorioextracaobean.project.createdAt}"></ufsm:textLabel>
+                <ufsm:textLabel title="Language" text="#{repositorioextracaobean.project.language}"></ufsm:textLabel>
+                <ufsm:textLabel title="Clone URL" text="#{repositorioextracaobean.project.cloneUrl}"></ufsm:textLabel>
+            </div>
+        </ufsm:card>
+        <div class="row d-flex">
+            <ufsm:card title="Commit">
+                <p>Extract commits from repository.</p>
+                <h:commandButton value="Extract Commits"
+                                 class="btn btn-outline-warning   btn-block"
+                                 actionListener="#{repositorioextracaobean.extrairCommit()}"
+                >
+                    <p:ajax event="click"
+                            onstart="PF('poll').start();
+                            $('#dialogProgress').modal('show');"
+                            oncomplete="$('#dialogProgress').modal('hide');PF('poll').stop();"
+                    ></p:ajax>
+                </h:commandButton>
+                <h:commandButton value="Extract File"
+                                 class="btn btn-outline-warning   btn-block"
+                                 actionListener="#{repositorioextracaobean.extrairFilesCommit()}"
+                >
+                    <p:ajax event="click"
+                            onstart="PF('poll').start();
+                            $('#dialogProgress').modal('show');"
+                            oncomplete="$('#dialogProgress').modal('hide');PF('poll').stop();"
+                    ></p:ajax>
+                </h:commandButton>
+                <div class="line"></div>
+                <p>Analysis of Feelings</p>
+                <h:commandButton value="Analyze feelings Commit"
+                                 class="btn btn-outline-warning   btn-block"
+                                 actionListener="#{repositorioextracaobean.analisarSentimentosCommit()}"
+                >
+                    <p:ajax event="click"
+                            onstart="PF('poll').start();
+                            $('#dialogProgress').modal('show');"
+                            oncomplete="$('#dialogProgress').modal('hide');PF('poll').stop();"
+                    ></p:ajax>
+                </h:commandButton>
+            </ufsm:card>
+            <ufsm:card title="Issue">
+                <p>Extract issues from repository.</p>
+                <h:commandButton value="Extract Issue"
+                                 class="btn btn-outline-warning   btn-block"
+                                 actionListener="#{repositorioextracaobean.extrairIssue()}"
+                >
+                    <p:ajax event="click"
+                            onstart="PF('poll').start();
+                            $('#dialogProgress').modal('show');"
+                            oncomplete="$('#dialogProgress').modal('hide');PF('poll').stop();"
+                    ></p:ajax>
+                </h:commandButton>
+
+                <h:commandButton value="Extract Issue Comment"
+                                 class="btn btn-outline-warning  btn-block"
+                                 actionListener="#{repositorioextracaobean.extrairIssueComment()}"
+                >
+                    <p:ajax event="click"
+                            onstart="PF('poll').start();
+                            $('#dialogProgress').modal('show');"
+                            oncomplete="$('#dialogProgress').modal('hide');PF('poll').stop();"
+                    ></p:ajax>
+                </h:commandButton>
+                <div class="line"></div>
+                <p>Analysis of Feelings.</p>
+                <h:commandButton value="Analyze feelings Issue"
+                                 class="btn btn-outline-warning   btn-block"
+                                 actionListener="#{repositorioextracaobean.analisarSentimentosIssue()}"
+                >
+                    <p:ajax event="click"
+                            onstart="PF('poll').start();
+                            $('#dialogProgress').modal('show');"
+                            oncomplete="$('#dialogProgress').modal('hide');PF('poll').stop();"
+                    ></p:ajax>
+                </h:commandButton>
+                <h:commandButton value="Analyze feelings Comment"
+                                 class="btn btn-outline-warning   btn-block"
+                                 actionListener="#{repositorioextracaobean.analisarSentimentos()}"
+                >
+                    <p:ajax event="click"
+                            onstart="PF('poll').start();
+                            $('#dialogProgress').modal('show');"
+                            oncomplete="$('#dialogProgress').modal('hide');PF('poll').stop();"
+                    ></p:ajax>
+                </h:commandButton>
+            </ufsm:card>
+        </div>
+        <div class="row d-flex">
+            <ufsm:card title="Pull Request">
+                <p>Extract pull request of repository.</p>
+
+                <h:commandButton value="Pull Request"
+                                 class="btn btn-outline-warning   btn-block"
+                                 actionListener="#{repositorioextracaobean.extrairPullRequest()}">
+                    <f:ajax execute="@form" rendered="@form"/>
+                </h:commandButton>
+            </ufsm:card>
+            <ufsm:card title="Google Groups">
+                <p>Integrate google groups to repository.</p>
+
+                <h:commandButton value="New Google Groups"
+                                 class="btn btn-outline-info   btn-block"
+                                 onclick="$('#formnovogooglegroups').modal('show');" immediate="true">
+                    <f:ajax execute="@form" render="@form"/>
+                </h:commandButton>
+
+                <h:dataTable id="tbl" value="#{googlegroupbean.groups}" var="g" class="table"
+                >
+                    <h:column>
+                        <f:facet name="header">Name</f:facet>
+                        #{g.name}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Url</f:facet>
+                        #{g.url}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Options</f:facet>
+                        <h:commandButton value="Analyze feelings Comment"
+                                         style="margin-right: 1%"
+                                         class="btn btn-outline-warning"
+                                         actionListener="#{googlegroupbean.analisarSentimentos(g)}">
+                            <f:ajax execute="@form" rendered="@form"/>
+                        </h:commandButton>
+
+                    </h:column>
+
+                </h:dataTable>
+            </ufsm:card>
+        </div>
+
+
+    </ui:define>
+    <ui:define name="modal">
+        <ufsm:modal id="dialogProgress" title="Progress">
+            <h:form id="progressForm">
+                <p:poll interval="1"
+                        widgetVar="poll"
+                        autoStart="false"
+                        async="true"
+                        update="msg prog"
+                        immediate="true"/>
+                <div class="text-center" style="padding: 2%">
+                    <h:outputText value="#{repositorioextracaobean.message}" id="msg" style="color:  #009921"/>
+                </div>
+                <div class="text-center" style="padding: 2%">
+                    <h:outputText value="#{repositorioextracaobean.progress} %" id="prog" style="color:  #33B35A"/>
+                </div>
+                <div id="squaresWaveG">
+                    <div id="squaresWaveG_1" class="squaresWaveG"></div>
+                    <div id="squaresWaveG_2" class="squaresWaveG"></div>
+                    <div id="squaresWaveG_3" class="squaresWaveG"></div>
+                    <div id="squaresWaveG_4" class="squaresWaveG"></div>
+                    <div id="squaresWaveG_5" class="squaresWaveG"></div>
+                    <div id="squaresWaveG_6" class="squaresWaveG"></div>
+                    <div id="squaresWaveG_7" class="squaresWaveG"></div>
+                    <div id="squaresWaveG_8" class="squaresWaveG"></div>
+                </div>
+            </h:form>
+        </ufsm:modal>
+        <ufsm:modal id="formnovogooglegroups" title="Google Groups Import">
+            <h:form id="googlegroups">
+            <div class="container-fluid">
+                <div class="col-lg-12">
+                    <ufsm:inputText value="#{googlegroupbean.group.name}" name="Name" required="true"
+                                    sizeField="col-lg-12" maxlength="55"></ufsm:inputText>
+                </div>
+                <div class="line"></div>
+                <div class="col-lg-12">
+                    <ufsm:inputText value="#{googlegroupbean.group.url}" name="URL" required="true"
+                                    sizeField="col-lg-12" maxlength="200"></ufsm:inputText>
+                </div>
+                <div class='col-lg-8 col-lg-offset-2'>
+                    <hr/>
+                </div>
+                <div class="col-lg-12">
+                    <h3>1. Select file</h3>
+                    <p:fileUpload id="arquivo" value="#{googlegroupbean.uploadedFile}"
+                                 label="Arquivo" mode="simple"/>
+                </div>
+            </div>
+                <h:commandButton value="Submit" actionListener="#{googlegroupbean.upload}" />
+            </h:form>
+            <f:facet name="footer">
+
+            </f:facet>
+        </ufsm:modal>
+    </ui:define>
+</ui:composition>

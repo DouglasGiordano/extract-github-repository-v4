@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:pretty="http://ocpsoft.com/prettyfaces"
+                template="template.xhtml"
+                xmlns:ufsm="http://xmlns.jcp.org/jsf/composite/ufsm">
+    <ui:define name="head">
+        <section class="dashboard-counts section-padding">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- Count item widget-->
+                    <div class="col-xl-3 col-md-5 col-6">
+                        <div class="wrapper count-title d-flex">
+                            <div class="icon"><i class="fa fa-archive"></i></div>
+                            <div class="name"><strong
+                                    class="text-uppercase">Commits</strong><span>Extract</span>
+                                <div class="count-number">#{pagebean.countRegisters.commit_count}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Count item widget-->
+                    <div class="col-xl-3 col-md-5 col-6">
+                        <div class="wrapper count-title d-flex">
+                            <div class="icon"><i class="fa fa-clone"></i></div>
+                            <div class="name"><strong
+                                    class="text-uppercase">File Commit</strong><span>Extract</span>
+                                <div class="count-number">#{pagebean.countRegisters.commit_file_count}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Count item widget-->
+                    <div class="col-xl-3 col-md-5 col-6">
+                        <div class="wrapper count-title d-flex">
+                            <div class="icon"><i class="fa fa-book"></i></div>
+                            <div class="name"><strong
+                                    class="text-uppercase">Issue</strong><span>Extract</span>
+                                <div class="count-number">#{pagebean.countRegisters.issue_count}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Count item widget-->
+                    <div class="col-xl-3 col-md-5 col-6">
+                        <div class="wrapper count-title d-flex">
+                            <div class="icon"><i class="fa fa-comment"></i></div>
+                            <div class="name"><strong
+                                    class="text-uppercase">Issue Comment</strong><span>Extract</span>
+                                <div class="count-number">#{pagebean.countRegisters.issue_comment_count}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </ui:define>
+
+    <ui:define name="body">
+        <button type="button" class="btn btn-outline-info" onclick="$('#meuform').modal('show');">New Repository</button>
+        <br/>
+        <br/>
+
+        <h:dataTable id="tbl" value="#{repositoriobean.projects}" var="o" styleClass="table"
+        >
+
+            <h:column>
+                <!-- column header -->
+                <f:facet name="header">Owner</f:facet>
+                <!-- row record -->
+                #{o.owner.login}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                #{o.name}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Created at</f:facet>
+                #{o.createdAt}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">URL</f:facet>
+                #{o.url}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Options</f:facet>
+                <h:button value= "Open" styleClass="btn btn-outline-warning" outcome ="pretty:repository-view">
+                    <f:param name= "id" value ="#{o.id}" />
+                </h:button>
+            </h:column>
+        </h:dataTable>
+        <script type="text/javascript" charset="utf-8">
+            $(document).ready(function() {
+                $('#form\\:tbl').dataTable();
+            } );
+        </script>
+    </ui:define>
+    <ui:define name="modal">
+        <ufsm:modal id="meuform" title="New Repository">
+            <div class="row">
+                <ufsm:inputText value="#{repositoriobean.user}" maxlength="30"
+                                name="Owner" required="true">
+                </ufsm:inputText>
+            </div>
+            <div class="row">
+                <ufsm:inputText value="#{repositoriobean.repository}" maxlength="30"
+                                name="Repository" required="true">
+                </ufsm:inputText>
+            </div>
+            <f:facet name="footer">
+                <h:commandLink value="Extract"
+                               class="btn btn-outline-info" actionListener="#{repositoriobean.extrair()}"
+                               onclick="$('#meuform').modal('hide');">
+                </h:commandLink>
+            </f:facet>
+
+        </ufsm:modal>
+    </ui:define>
+
+</ui:composition>
+

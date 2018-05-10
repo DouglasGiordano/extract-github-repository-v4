@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="template.xhtml"
+                xmlns:ufsm="http://xmlns.jcp.org/jsf/composite/ufsm">
+    <ui:define name="title">
+        Configurações
+        <br/>
+        <br/>
+    </ui:define>
+
+    <ui:define name="body">
+        <ufsm:card title="User registration" size="col-lg-12">
+
+            <div class="row">
+                <ufsm:inputText value="#{settingsbean.user.usuario}" maxlength="30" name="User" required="true">
+                </ufsm:inputText>
+            </div>
+            <div class="row">
+                <ufsm:inputSenha value="#{settingsbean.user.senha}" maxlength="30" name="Password" required="true">
+                </ufsm:inputSenha>
+            </div>
+            <h:commandButton value="Add"
+                             class="btn btn-outline-info" actionListener="#{settingsbean.adicionar()}">
+                <f:ajax execute=":form" render="@form"/>
+            </h:commandButton>
+            <br/>
+            <br/>
+            <h:dataTable value="#{settingsbean.users}" var="o" class="table"
+                         >
+
+                <h:column>
+                    <!-- column header -->
+                    <f:facet name="header">Login</f:facet>
+                    <!-- row record -->
+                    #{o.usuario}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Options</f:facet>
+                    <h:commandButton value="Edit" immediate="true" class="btn btn-outline-warning" style="margin-right: 1%">
+                        <f:ajax render=":form" listener="#{settingsbean.editar(o)}"/>
+                    </h:commandButton>
+                    <h:commandButton value="Delete" immediate="true" class="btn btn-outline-danger">
+                        <f:ajax render=":form" listener="#{settingsbean.remover(o)}"/>
+                    </h:commandButton>
+                </h:column>
+            </h:dataTable>
+
+        </ufsm:card>
+        <ufsm:card title="Senti Strength" size="col-lg-12" id="cardSentiStrength">
+            <div class="row">
+                <ufsm:inputText maxlength="300" id="path" value="#{settingsbean.settings.path}" name="Path" required="true">
+                </ufsm:inputText>
+                <h:commandButton  value="Execute"
+                                  class="btn btn-outline-warning" 
+                                  style="margin-right: 1%">
+                    <f:ajax event="click"  execute="@this :form:cardSentiStrength" render=":form:path" listener="#{settingsbean.testar()}"/>
+                </h:commandButton>
+            </div>
+        </ufsm:card>
+
+    </ui:define>
+    <ui:define name="modal">
+    </ui:define>
+
+</ui:composition>
+
