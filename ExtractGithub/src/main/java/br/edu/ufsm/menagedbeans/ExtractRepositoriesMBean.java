@@ -5,10 +5,16 @@
  */
 package br.edu.ufsm.menagedbeans;
 
+import br.edu.ufsm.controller.ExtracaoCommit;
+import br.edu.ufsm.controller.ExtracaoEvent;
 import br.edu.ufsm.controller.ExtracaoIssue;
 import br.edu.ufsm.controller.ExtracaoRepository;
 import br.edu.ufsm.model.*;
-import br.edu.ufsm.persistence.CountRegistersDao;
+import br.edu.ufsm.model.event.Event;
+import br.edu.ufsm.model.event.EventIssue;
+import br.edu.ufsm.persistence.CommitDao;
+import br.edu.ufsm.persistence.EventDao;
+import br.edu.ufsm.persistence.EventIssueDao;
 import br.edu.ufsm.persistence.IssueDao;
 import br.edu.ufsm.persistence.ProjectDao;
 import br.edu.ufsm.persistence.UsuarioAutenticacaoDao;
@@ -32,6 +38,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.eclipse.egit.github.core.RepositoryCommit;
+import org.eclipse.egit.github.core.service.CommitService;
 
 /**
  * @author Douglas Giordano
@@ -40,23 +48,29 @@ import java.util.logging.Logger;
 @ViewScoped
 public class ExtractRepositoriesMBean implements Serializable {
 
-    private String list;
-    private List<Project> projects;
-    private HashMap<Project, String> projectsStatus;
     @EJB
     private ProjectDao projectDao;
     @EJB
     private UsuarioAutenticacaoDao userDao;
     @EJB
     private IssueDao issueDao;
+    @EJB
+    private EventDao eventDao;
+    @EJB
+    private EventIssueDao eventIssueDao;
+    @EJB
+    private CommitDao commitDao;
+
+    private String list;
+    private List<Project> projects;
+    private HashMap<Project, String> projectsStatus;
     private GitHubClient client;
     private List<UserAutenticacao> users;
     private UserAutenticacao user;
     private Project projectNow;
     private Project projectEnd;
-    private int error;
     private static final Logger LOGGER = Logger.getLogger(ExtractRepositoriesMBean.class.getName());
-    SentiStrength sentiStrength;
+    private SentiStrength sentiStrength;
 
     /**
      * Creates a new instance of ExtrairMBean
@@ -74,9 +88,9 @@ public class ExtractRepositoriesMBean implements Serializable {
         projects = new ArrayList<>();
         projectsStatus = new HashMap<>();
         sentiStrength = new SentiStrength();
-        String ssthInitialisation[] = {"sentidata", "/home/gpscom/data_2015/", "explain"};
-
-        sentiStrength.initialise(ssthInitialisation);
+//        String ssthInitialisation[] = {"sentidata", "/home/gpscom/data_2015/", "explain"};
+//
+//        sentiStrength.initialise(ssthInitialisation);
     }
 
     public void extractRepositories() {
@@ -118,12 +132,20 @@ public class ExtractRepositoriesMBean implements Serializable {
                 }
             }
             checkExtractIssueComment(project);
+            extrairEvents(project);
+            extrairIssueEvents(project);
+            extrairCommit(project);
             try {
-                analisarSentimentos(project);
-                analisarSentimentosIssue(project);
-            } catch (Exception ex) {
+                extrairFilesCommit(project);
+            } catch (IOException ex) {
                 printError(project, ex);
             }
+//            try {
+//                analisarSentimentos(project);
+//                analisarSentimentosIssue(project);
+//            } catch (Exception ex) {
+//                printError(project, ex);
+//            }
             this.setProjectEnd(project);
             projectsStatus.put(project, "Completed");
         }
@@ -194,6 +216,125 @@ public class ExtractRepositoriesMBean implements Serializable {
         projectsStatus.put(projeto, "Extraction issue Completed");
     }
 
+    public void extrairEvents(Project projeto) {
+        projectsStatus.put(projeto, "Starting extract of events");
+        RepositoryId repo = new RepositoryId(projeto.getOwner().getLogin(), projeto.getName());
+        List<Event> events = null;
+        try {
+            events = ExtracaoEvent.extractEvent(getClient(), repo, projeto);
+        } catch (Exception ex) {
+            verificarCredenciais();
+            printError(projeto, ex);
+            try {
+                events = ExtracaoEvent.extractEvent(getClient(), repo, projeto);
+            } catch (IOException e) {
+                printError(projeto, ex);
+            }
+        }
+        projectsStatus.put(projeto, "Starting persistence of events");
+        int i = 0;
+        int total = events.size();
+        for (Event event : events) {
+            try {
+                i++;
+                projectsStatus.put(projeto, "Extracting event" + i + " of " + total);
+                eventDao.save(event);
+            } catch (PersistenceException ex) {
+                projectsStatus.put(projeto, "Erro: " + ex.getMessage());
+                printError(projeto, ex);
+            } catch (Exception ex) {
+                projectsStatus.put(projeto, "Erro: " + ex.getMessage());
+                printError(projeto, ex);
+            }
+        }
+        projectsStatus.put(projeto, "Extraction event Completed");
+    }
+
+    public void extrairIssueEvents(Project projeto) {
+        projectsStatus.put(projeto, "Starting extract of events issue");
+        RepositoryId repo = new RepositoryId(projeto.getOwner().getLogin(), projeto.getName());
+        List<EventIssue> events = null;
+        try {
+            events = ExtracaoEvent.extractIssueEvent(getClient(), repo, projeto);
+        } catch (Exception ex) {
+            verificarCredenciais();
+            printError(projeto, ex);
+            try {
+                events = ExtracaoEvent.extractIssueEvent(getClient(), repo, projeto);
+            } catch (IOException e) {
+                printError(projeto, ex);
+            }
+        }
+        projectsStatus.put(projeto, "Starting persistence of events issue");
+        int i = 0;
+        int total = events.size();
+        for (EventIssue event : events) {
+            try {
+                i++;
+                projectsStatus.put(projeto, "Extracting issue event" + i + " of " + total);
+                eventIssueDao.save(event);
+            } catch (PersistenceException ex) {
+                projectsStatus.put(projeto, "Erro: " + ex.getMessage());
+                printError(projeto, ex);
+            } catch (Exception ex) {
+                projectsStatus.put(projeto, "Erro: " + ex.getMessage());
+                printError(projeto, ex);
+            }
+        }
+        projectsStatus.put(projeto, "Extraction issue event Completed");
+    }
+
+    public void extrairCommit(Project projeto) {
+        try {
+            projectsStatus.put(projeto, "Starting extract of commit");
+            RepositoryId repo = new RepositoryId(projeto.getOwner().getLogin(), projeto.getName());
+            List<Commit> commits = ExtracaoCommit.extract(client, repo, projeto);
+            int total = commits.size();
+            int i = 0;
+            for (Commit commit : commits) {
+                i++;
+                commitDao.merge(commit);
+                projectsStatus.put(projeto, "Extracting " + i + " of " + total);
+            }
+            Message.printMessageInfo("The extraction was successful.");
+        } catch (Exception ex) {
+            projectsStatus.put(projeto, "An error has occurred: " + ex.getMessage());
+            printError(projeto, ex);
+        }
+    }
+
+    public void extrairFilesCommit(Project projeto) throws IOException {
+        projectsStatus.put(projeto, "Starting extract of commit file");
+        RepositoryId repo = new RepositoryId(projeto.getOwner().getLogin(), projeto.getName());
+        List<String> commits = commitDao.getCommits(projeto.getId());
+        CommitService commitService = new CommitService(client);
+        Commit commitD;
+        RepositoryCommit commit;
+        int i = 0;
+        int total = commits.size();
+        for (String id : commits) {
+            i++;
+            try {
+                commit = commitService.getCommit(repo, id);
+                commitD = new Commit(commit, projeto);
+                projectsStatus.put(projeto, "Extracting " + i + " of " + total);
+            } catch (Exception ex) {
+                verificarCredenciais();
+                extrairFilesCommit(projeto);
+                break;
+            }
+            try {
+                commitDao.merge(commitD);
+            } catch (PersistenceException ex) {
+                System.out.println(ex.getCause());
+            } catch (Exception ex) {
+                System.out.println(ex.getCause());
+            }
+        }
+        projectsStatus.put(projeto, "Extraction Completed");
+        projectsStatus.put(projeto, "The extraction was successful.");
+    }
+
     public Project extrairIssueComment(Project projeto) throws IOException {
         projectsStatus.put(projeto, "Starting extract of issues comment");
         RepositoryId repo = new RepositoryId(projeto.getOwner().getLogin(), projeto.getName());
@@ -234,7 +375,7 @@ public class ExtractRepositoriesMBean implements Serializable {
     }
 
     private void printError(Project project, Exception ex) {
-        String mensagem = "Error " + error + " in project " + project.getId() + " " + project.getName() + " " + project.getUrl();
+        String mensagem = "Error " + " in project " + project.getId() + " " + project.getName() + " " + project.getUrl();
         LOGGER.log(Level.WARNING, mensagem, ex);
     }
 

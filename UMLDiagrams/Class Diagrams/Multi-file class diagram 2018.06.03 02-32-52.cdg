@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="Multi-file class diagram">
+  <ClassDiagramComponents>
+    <Class name="UsuarioMBean" package="br.edu.ufsm.menagedbeans" visibility="public" xPosition="20.0" yPosition="20.0">
+      <Fields>
+        <Field name="dao" type="UsuarioDao" visibility="private"/>
+        <Field name="usuarios" type="List&lt;User&gt;" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="atualizarUsuarios" returnType="void" visibility="public"/>
+        <Method name="init" returnType="void" visibility="public"/>
+        <Method name="getUsuarios" returnType="List&lt;User&gt;" visibility="public"/>
+        <Method name="setUsuarios" returnType="void" visibility="public">
+          <Argument type="ArrayList&lt;User&gt;" name="usuarios"/>
+        </Method>
+        <Method name="getDao" returnType="UsuarioDao" visibility="public"/>
+        <Method name="setDao" returnType="void" visibility="public">
+          <Argument type="UsuarioDao" name="dao"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="RepositorioExtracaoMBean" package="br.edu.ufsm.menagedbeans" visibility="public" xPosition="320.0" yPosition="20.0">
+      <Fields>
+        <Field name="project" type="Project" visibility="private"/>
+        <Field name="projectDao" type="ProjectDao" visibility="private"/>
+        <Field name="commitDao" type="CommitDao" visibility="private"/>
+        <Field name="pullRequestDao" type="PullRequestDao" visibility="private"/>
+        <Field name="userDao" type="UsuarioAutenticacaoDao" visibility="private"/>
+        <Field name="googleGroupTopicDao" type="GoogleGroupTopicDao" visibility="private"/>
+        <Field name="issueDao" type="IssueDao" visibility="private"/>
+        <Field name="client" type="GitHubClient" visibility="private"/>
+        <Field name="users" type="List&lt;UserAutenticacao&gt;" visibility="private"/>
+        <Field name="user" type="UserAutenticacao" visibility="private"/>
+        <Field name="progress" type="int" visibility="private"/>
+        <Field name="message" type="String" visibility="private"/>
+        <Field name="id" type="int" visibility="private"/>
+        <Field name="countCommit" type="Long" visibility="private"/>
+        <Field name="countIssue" type="Long" visibility="private"/>
+        <Field name="countPullRequest" type="Long" visibility="private"/>
+        <Field name="countGroup" type="Long" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="init" returnType="void" visibility="public"/>
+        <Method name="load" returnType="void" visibility="public"/>
+        <Method name="extrairCommit" returnType="void" visibility="public"/>
+        <Method name="extrairFilesCommit" returnType="void" visibility="public"/>
+        <Method name="extrairIssue" returnType="void" visibility="public"/>
+        <Method name="extrairIssueComment" returnType="void" visibility="public"/>
+        <Method name="extrairPullRequest" returnType="void" visibility="public"/>
+        <Method name="analisarSentimentos" returnType="void" visibility="public"/>
+        <Method name="analisarSentimentosIssue" returnType="void" visibility="public"/>
+        <Method name="getSentimento" returnType="Sentimento" visibility="public">
+          <Argument type="Sentimento" name="sentimento"/>
+          <Argument type="String" name="mensagem"/>
+        </Method>
+        <Method name="analisarSentimentosCommit" returnType="void" visibility="public"/>
+        <Method name="mySign" returnType="int" visibility="public">
+          <Argument type="int" name="n"/>
+        </Method>
+        <Method name="mySignC" returnType="int" visibility="public">
+          <Argument type="int" name="p"/>
+          <Argument type="int" name="n"/>
+        </Method>
+        <Method name="verificarCredenciais" returnType="void" visibility="public"/>
+        <Method name="atualizarProgresso" returnType="void" visibility="private">
+          <Argument type="int" name="i"/>
+          <Argument type="int" name="quantidade"/>
+        </Method>
+        <Method name="getProject" returnType="Project" visibility="public"/>
+        <Method name="setProject" returnType="void" visibility="public">
+          <Argument type="Project" name="project"/>
+        </Method>
+        <Method name="getUsers" returnType="List&lt;UserAutenticacao&gt;" visibility="public"/>
+        <Method name="setUsers" returnType="void" visibility="public">
+          <Argument type="ArrayList&lt;UserAutenticacao&gt;" name="users"/>
+        </Method>
+        <Method name="getProgress" returnType="int" visibility="public"/>
+        <Method name="setProgress" returnType="void" visibility="public">
+          <Argument type="int" name="progress"/>
+        </Method>
+        <Method name="getMessage" returnType="String" visibility="public"/>
+        <Method name="setMessage" returnType="void" visibility="public">
+          <Argument type="String" name="message"/>
+        </Method>
+        <Method name="getId" returnType="int" visibility="public"/>
+        <Method name="setId" returnType="void" visibility="public">
+          <Argument type="int" name="id"/>
+        </Method>
+        <Method name="getCountCommit" returnType="Long" visibility="public"/>
+        <Method name="setCountCommit" returnType="void" visibility="public">
+          <Argument type="Long" name="countCommit"/>
+        </Method>
+        <Method name="getCountIssue" returnType="Long" visibility="public"/>
+        <Method name="setCountIssue" returnType="void" visibility="public">
+          <Argument type="Long" name="countIssue"/>
+        </Method>
+        <Method name="getCountPullRequest" returnType="Long" visibility="public"/>
+        <Method name="setCountPullRequest" returnType="void" visibility="public">
+          <Argument type="Long" name="countPullRequest"/>
+        </Method>
+        <Method name="getCountGroup" returnType="Long" visibility="public"/>
+        <Method name="setCountGroup" returnType="void" visibility="public">
+          <Argument type="Long" name="countGroup"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="ExtractRepositoriesMBean" package="br.edu.ufsm.menagedbeans" visibility="public" xPosition="780.0" yPosition="1260.0">
+      <Fields>
+        <Field name="list" type="String" visibility="private"/>
+        <Field name="projects" type="List&lt;Project&gt;" visibility="private"/>
+        <Field name="projectsStatus" type="HashMap&lt;Project, String&gt;" visibility="private"/>
+        <Field name="projectDao" type="ProjectDao" visibility="private"/>
+        <Field name="userDao" type="UsuarioAutenticacaoDao" visibility="private"/>
+        <Field name="issueDao" type="IssueDao" visibility="private"/>
+        <Field name="client" type="GitHubClient" visibility="private"/>
+        <Field name="users" type="List&lt;UserAutenticacao&gt;" visibility="private"/>
+        <Field name="user" type="UserAutenticacao" visibility="private"/>
+        <Field name="projectNow" type="Project" visibility="private"/>
+        <Field name="projectEnd" type="Project" visibility="private"/>
+        <Field name="LOGGER" type="Logger" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="sentiStrength" type="SentiStrength" visibility="package"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="init" returnType="void" visibility="public"/>
+        <Method name="extractRepositories" returnType="void" visibility="public"/>
+        <Method name="extract" returnType="void" visibility="public"/>
+        <Method name="checkExtractIssueComment" returnType="void" visibility="public">
+          <Argument type="Project" name="project"/>
+        </Method>
+        <Method name="checkStatus" returnType="void" visibility="public"/>
+        <Method name="extrairIssue" returnType="void" visibility="public">
+          <Argument type="Project" name="projeto"/>
+        </Method>
+        <Method name="extrairIssueComment" returnType="Project" visibility="public">
+          <Argument type="Project" name="projeto"/>
+        </Method>
+        <Method name="printError" returnType="void" visibility="private">
+          <Argument type="Project" name="project"/>
+          <Argument type="Exception" name="ex"/>
+        </Method>
+        <Method name="printInfo" returnType="void" visibility="private">
+          <Argument type="String" name="mensagem"/>
+        </Method>
+        <Method name="analisarSentimentos" returnType="void" visibility="public">
+          <Argument type="Project" name="projeto"/>
+        </Method>
+        <Method name="analisarSentimentosIssue" returnType="void" visibility="public">
+          <Argument type="Project" name="projeto"/>
+        </Method>
+        <Method name="getMessageStatus" returnType="String" visibility="public">
+          <Argument type="Project" name="p"/>
+        </Method>
+        <Method name="getSentimento" returnType="Sentimento" visibility="public">
+          <Argument type="Sentimento" name="sentimento"/>
+          <Argument type="String" name="mensagem"/>
+        </Method>
+        <Method name="mySign" returnType="int" visibility="public">
+          <Argument type="int" name="n"/>
+        </Method>
+        <Method name="mySignC" returnType="int" visibility="public">
+          <Argument type="int" name="p"/>
+          <Argument type="int" name="n"/>
+        </Method>
+        <Method name="verificarCredenciais" returnType="void" visibility="public"/>
+        <Method name="getProjects" returnType="List&lt;Project&gt;" visibility="public"/>
+        <Method name="setProjects" returnType="void" visibility="public">
+          <Argument type="List&lt;Project&gt;" name="projects"/>
+        </Method>
+        <Method name="getProjectDao" returnType="ProjectDao" visibility="public"/>
+        <Method name="setProjectDao" returnType="void" visibility="public">
+          <Argument type="ProjectDao" name="projectDao"/>
+        </Method>
+        <Method name="getUserDao" returnType="UsuarioAutenticacaoDao" visibility="public"/>
+        <Method name="setUserDao" returnType="void" visibility="public">
+          <Argument type="UsuarioAutenticacaoDao" name="userDao"/>
+        </Method>
+        <Method name="getIssueDao" returnType="IssueDao" visibility="public"/>
+        <Method name="setIssueDao" returnType="void" visibility="public">
+          <Argument type="IssueDao" name="issueDao"/>
+        </Method>
+        <Method name="getClient" returnType="GitHubClient" visibility="public"/>
+        <Method name="setClient" returnType="void" visibility="public">
+          <Argument type="GitHubClient" name="client"/>
+        </Method>
+        <Method name="getUsers" returnType="List&lt;UserAutenticacao&gt;" visibility="public"/>
+        <Method name="setUsers" returnType="void" visibility="public">
+          <Argument type="List&lt;UserAutenticacao&gt;" name="users"/>
+        </Method>
+        <Method name="getUser" returnType="UserAutenticacao" visibility="public"/>
+        <Method name="setUser" returnType="void" visibility="public">
+          <Argument type="UserAutenticacao" name="user"/>
+        </Method>
+        <Method name="getList" returnType="String" visibility="public"/>
+        <Method name="setList" returnType="void" visibility="public">
+          <Argument type="String" name="list"/>
+        </Method>
+        <Method name="getProjectNow" returnType="Project" visibility="public"/>
+        <Method name="setProjectNow" returnType="void" visibility="public">
+          <Argument type="Project" name="projectNow"/>
+        </Method>
+        <Method name="getProjectEnd" returnType="Project" visibility="public"/>
+        <Method name="setProjectEnd" returnType="void" visibility="public">
+          <Argument type="Project" name="projectEnd"/>
+        </Method>
+        <Method name="getProjectsStatus" returnType="HashMap&lt;Project, String&gt;" visibility="public"/>
+        <Method name="setProjectsStatus" returnType="void" visibility="public">
+          <Argument type="HashMap&lt;Project, String&gt;" name="projectsStatus"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="RepositorioMBean" package="br.edu.ufsm.menagedbeans" visibility="public" xPosition="972.0" yPosition="145.0">
+      <Fields>
+        <Field name="projects" type="List&lt;Project&gt;" visibility="private"/>
+        <Field name="projectDao" type="ProjectDao" visibility="private"/>
+        <Field name="repository" type="String" visibility="private"/>
+        <Field name="user" type="String" visibility="private"/>
+        <Field name="client" type="GitHubClient" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="init" returnType="void" visibility="public"/>
+        <Method name="extrair" returnType="void" visibility="public"/>
+        <Method name="getProjects" returnType="List&lt;Project&gt;" visibility="public"/>
+        <Method name="setProjects" returnType="void" visibility="public">
+          <Argument type="List&lt;Project&gt;" name="projects"/>
+        </Method>
+        <Method name="getRepository" returnType="String" visibility="public"/>
+        <Method name="setRepository" returnType="void" visibility="public">
+          <Argument type="String" name="repository"/>
+        </Method>
+        <Method name="getUser" returnType="String" visibility="public"/>
+        <Method name="setUser" returnType="void" visibility="public">
+          <Argument type="String" name="user"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="Message" package="br.edu.ufsm.menagedbeans" visibility="public" xPosition="1287.0" yPosition="20.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="printMessageInfo" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="message"/>
+        </Method>
+        <Method name="printMessageInfo" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="message"/>
+          <Argument type="String" name="nameForm"/>
+        </Method>
+        <Method name="printMessageInfo" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="title"/>
+          <Argument type="String" name="message"/>
+          <Argument type="String" name="nameForm"/>
+        </Method>
+        <Method name="printMessageError" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="message"/>
+          <Argument type="String" name="nameForm"/>
+        </Method>
+        <Method name="printMessageError" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="title"/>
+          <Argument type="String" name="message"/>
+          <Argument type="String" name="nameForm"/>
+        </Method>
+        <Method name="printMessageError" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="message"/>
+        </Method>
+        <Method name="printMessageWarning" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="message"/>
+          <Argument type="String" name="nameForm"/>
+        </Method>
+        <Method name="printMessageWarning" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="title"/>
+          <Argument type="String" name="message"/>
+          <Argument type="String" name="nameForm"/>
+        </Method>
+        <Method name="printMessageWarning" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="message"/>
+        </Method>
+        <Method name="printWarning" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="message"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="SettingsMBean" package="br.edu.ufsm.menagedbeans" visibility="public" xPosition="1595.0" yPosition="492.0">
+      <Fields>
+        <Field name="userDao" type="UsuarioAutenticacaoDao" visibility="private"/>
+        <Field name="user" type="UserAutenticacao" visibility="private"/>
+        <Field name="users" type="List" visibility="private"/>
+        <Field name="settings" type="Settings" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="init" returnType="void" visibility="public"/>
+        <Method name="testar" returnType="void" visibility="public"/>
+        <Method name="adicionar" returnType="void" visibility="public"/>
+        <Method name="remover" returnType="void" visibility="public">
+          <Argument type="UserAutenticacao" name="usuario"/>
+        </Method>
+        <Method name="editar" returnType="void" visibility="public">
+          <Argument type="UserAutenticacao" name="usuario"/>
+        </Method>
+        <Method name="getUserDao" returnType="UsuarioAutenticacaoDao" visibility="public"/>
+        <Method name="setUserDao" returnType="void" visibility="public">
+          <Argument type="UsuarioAutenticacaoDao" name="userDao"/>
+        </Method>
+        <Method name="getUser" returnType="UserAutenticacao" visibility="public"/>
+        <Method name="setUser" returnType="void" visibility="public">
+          <Argument type="UserAutenticacao" name="user"/>
+        </Method>
+        <Method name="getUsers" returnType="List&lt;UserAutenticacao&gt;" visibility="public"/>
+        <Method name="setUsers" returnType="void" visibility="public">
+          <Argument type="ArrayList&lt;UserAutenticacao&gt;" name="users"/>
+        </Method>
+        <Method name="getSettings" returnType="Settings" visibility="public"/>
+        <Method name="setSettings" returnType="void" visibility="public">
+          <Argument type="Settings" name="settings"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="PageMBean" package="br.edu.ufsm.menagedbeans" visibility="public" xPosition="2152.0" yPosition="365.0">
+      <Fields>
+        <Field name="coutRegisterDao" type="CountRegistersDao" visibility="private"/>
+        <Field name="countRegisters" type="CountRegisters" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="init" returnType="void" visibility="public"/>
+        <Method name="getCountRegisters" returnType="CountRegisters" visibility="public"/>
+        <Method name="getUsuario" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="MessageView" package="br.edu.ufsm.menagedbeans" visibility="public" xPosition="2120.0" yPosition="20.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="showMessage" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="title"/>
+          <Argument type="String" name="message"/>
+        </Method>
+        <Method name="showMessageDanger" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="title"/>
+          <Argument type="String" name="message"/>
+        </Method>
+        <Method name="showMessageWarning" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="title"/>
+          <Argument type="String" name="message"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="UrlGithubValidator" package="br.edu.ufsm.menagedbeans" visibility="public" xPosition="20.0" yPosition="420.0">
+      <Fields>
+        <Field name="pattern" type="Pattern" visibility="private"/>
+        <Field name="matcher" type="Matcher" visibility="private"/>
+        <Field name="EMAIL_PATTERN" type="Pattern" visibility="private" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="validate" returnType="boolean" visibility="public" isStatic="true">
+          <Argument type="String" name="hex"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="GoogleGroupMBean" package="br.edu.ufsm.menagedbeans" visibility="public" xPosition="920.0" yPosition="543.0">
+      <Fields>
+        <Field name="repositorioMBean" type="RepositorioExtracaoMBean" visibility="private"/>
+        <Field name="projeto" type="Project" visibility="private"/>
+        <Field name="group" type="GoogleGroup" visibility="private"/>
+        <Field name="groups" type="List&lt;GoogleGroup&gt;" visibility="private"/>
+        <Field name="uploadedFile" type="UploadedFile" visibility="private"/>
+        <Field name="groupDao" type="GoogleGroupDao" visibility="private"/>
+        <Field name="messageDao" type="GoogleMessageDao" visibility="private"/>
+        <Field name="topicDao" type="GoogleGroupTopicDao" visibility="private"/>
+        <Field name="projectDao" type="ProjectDao" visibility="private"/>
+        <Field name="mapToItem" type="Function&lt;String, GoogleGroupMessage&gt;" visibility="private" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="init" returnType="void" visibility="public"/>
+        <Method name="getGroup" returnType="GoogleGroup" visibility="public"/>
+        <Method name="setGroup" returnType="void" visibility="public">
+          <Argument type="GoogleGroup" name="group"/>
+        </Method>
+        <Method name="upload" returnType="void" visibility="public"/>
+        <Method name="processInputFile" returnType="List&lt;GoogleGroupMessage&gt;" visibility="private">
+          <Argument type="InputStream" name="inputFS"/>
+        </Method>
+        <Method name="analisarSentimentos" returnType="void" visibility="public">
+          <Argument type="GoogleGroup" name="g"/>
+        </Method>
+        <Method name="getSentimento" returnType="Sentimento" visibility="public">
+          <Argument type="Sentimento" name="sentimento"/>
+          <Argument type="String" name="mensagem"/>
+        </Method>
+        <Method name="mySign" returnType="int" visibility="public">
+          <Argument type="int" name="n"/>
+        </Method>
+        <Method name="mySignC" returnType="int" visibility="public">
+          <Argument type="int" name="p"/>
+          <Argument type="int" name="n"/>
+        </Method>
+        <Method name="getProjeto" returnType="Project" visibility="public"/>
+        <Method name="setProjeto" returnType="void" visibility="public">
+          <Argument type="Project" name="projeto"/>
+        </Method>
+        <Method name="getGroups" returnType="List&lt;GoogleGroup&gt;" visibility="public"/>
+        <Method name="setGroups" returnType="void" visibility="public">
+          <Argument type="List&lt;GoogleGroup&gt;" name="groups"/>
+        </Method>
+        <Method name="getUploadedFile" returnType="UploadedFile" visibility="public"/>
+        <Method name="setUploadedFile" returnType="void" visibility="public">
+          <Argument type="UploadedFile" name="uploadedFile"/>
+        </Method>
+      </Methods>
+    </Class>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <HasRelation name="repositorioMBean" source="br.edu.ufsm.menagedbeans.GoogleGroupMBean" target="br.edu.ufsm.menagedbeans.RepositorioExtracaoMBean" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="br.edu.ufsm.menagedbeans.GoogleGroupMBean" target="br.edu.ufsm.menagedbeans.Message" sourceCardinality="1..1" targetCardinality="1..1"/>
+  </ClassDiagramRelations>
+</ClassDiagram>
