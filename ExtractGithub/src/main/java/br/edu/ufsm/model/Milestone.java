@@ -27,6 +27,7 @@ public class Milestone implements Serializable {
     private int closedIssues;
     private int number;
     private int openIssues;
+    @Column(length = 300)
     private String description;
     private String state;
     private String title;

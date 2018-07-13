@@ -78,7 +78,6 @@ public class Commit implements Serializable, EntityBD {
             files = new ArrayList<>();
             for (org.eclipse.egit.github.core.CommitFile file : commit.getFiles()) {
                 files.add(new CommitFile(file, this.sha, this));
-                file.setPatch(null);
             }
         }
 

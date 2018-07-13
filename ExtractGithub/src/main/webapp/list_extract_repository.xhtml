@@ -20,21 +20,41 @@
     </ui:define>
 
     <ui:define name="body">
-        <ufsm:inputTextArea id="projects" rows="20"
-                            name="Projetos" required="true"
-                            value="#{extractrepositoriesmbean.list}"
-                            rendered="#{empty extractrepositoriesmbean.projects}"/>
-        <h:commandButton value="Get Repositories"
-                         class="btn btn-outline-warning   btn-block"
-                         action="#{extractrepositoriesmbean.extractRepositories()}"
-                         rendered="#{empty extractrepositoriesmbean.projects}"
-        >
-            <f:ajax execute="form:projects"
-                    render="form" />
-        </h:commandButton>
+        <h:panelGroup id="panelInfoDownload" layout="block" rendered="#{empty extractrepositoriesmbean.projects}">
+
+            <p>Copy the URL of each project in the field below.</p>
+            <p>Example:  https://github.com/owner/nameproject</p>
+            <ul>
+                <li>https://github.com/rails/rails</li>
+                <li>https://github.com/elixir-lang/elixir</li>
+                <li>https://github.com/apache/maven</li>
+            </ul> 
+
+            <p>Select download content</p>
+            <h:selectBooleanCheckbox id="checkcommit" value="#{extractrepositoriesmbean.checkDownloadContent.commit}" /> Commit
+            <h:selectBooleanCheckbox id="checkcommitfile" value="#{extractrepositoriesmbean.checkDownloadContent.commitFiles}" /> Files Commit           
+            <h:selectBooleanCheckbox id="checkissue" value="#{extractrepositoriesmbean.checkDownloadContent.issue}" /> Issue
+            <h:selectBooleanCheckbox id="checkissuecomment" value="#{extractrepositoriesmbean.checkDownloadContent.issueComment}" /> Issue Comments            
+            <h:selectBooleanCheckbox id="checkevent" value="#{extractrepositoriesmbean.checkDownloadContent.event}" /> Events 
+            <h:selectBooleanCheckbox id="checkeventissue" value="#{extractrepositoriesmbean.checkDownloadContent.eventIssue}" /> Events Issue 
+            <hr/>
+            <ufsm:inputTextArea id="projects" rows="20"
+                                name="Repositories" required="true"
+                                value="#{extractrepositoriesmbean.list}"
+                                />
+            <h:commandButton value="Get Repositories"
+                             class="btn btn-outline-warning   btn-block"
+                             action="#{extractrepositoriesmbean.extractRepositories()}"
+                             >
+                <f:ajax execute="form:projects form:checkcommit form:checkcommitfile 
+                        form:checkissue form:checkissuecomment form:checkevent form:checkeventissue"
+                        render="form" />
+            </h:commandButton>
+        </h:panelGroup>
+
         <h:dataTable id="tbl" value="#{extractrepositoriesmbean.projects}" var="o" styleClass="table"
                      rendered="#{not empty extractrepositoriesmbean.projects}"
-        >
+                     >
 
             <h:column>
                 <!-- column header -->
@@ -45,12 +65,12 @@
 
             <h:column>
                 <f:facet name="header">Name</f:facet>
-                #{o.name}
+                    #{o.name}
             </h:column>
 
             <h:column>
                 <f:facet name="header">URL</f:facet>
-                #{o.url}
+                    #{o.url}
             </h:column>
             <h:column>
                 <f:facet name="header">Status</f:facet>
@@ -76,16 +96,16 @@
                          action="#{extractrepositoriesmbean.extract()}"
                          onclick=""
                          rendered="#{not empty extractrepositoriesmbean.projects}"
-        >
+                         >
         </h:commandButton>
         <script type="text/javascript" charset="utf-8">
-            $(document).ready(function() {
+            $(document).ready(function () {
                 $('#form\\:tbl').dataTable();
-            } );
+            });
         </script>
         <!--<p:ajaxStatus id="ajaxStatusPanel" onstart="PF('poll').start();-->
-                            <!--$('#dialogProgress').modal('show');"-->
-                      <!--oncomplete="$('#dialogProgress').modal('hide');PF('poll').stop();"/>-->
+        <!--$('#dialogProgress').modal('show');"-->
+        <!--oncomplete="$('#dialogProgress').modal('hide');PF('poll').stop();"/>-->
     </ui:define>
     <ui:define name="modal">
 

@@ -46,7 +46,7 @@ public class CommitFile implements Serializable, EntityBD {
         this.deletions = commitFile.getDeletions();
         this.blobUrl = commitFile.getBlobUrl();
         this.filename = commitFile.getFilename();
-        //this.patch = commitFile.getPatch();
+        this.patch = commitFile.getPatch();
         this.rawUrl = commitFile.getRawUrl();
         this.sha = commitFile.getSha();
         this.status = commitFile.getStatus();

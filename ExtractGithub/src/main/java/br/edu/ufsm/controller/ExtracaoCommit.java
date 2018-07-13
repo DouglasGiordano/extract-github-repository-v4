@@ -22,17 +22,13 @@ import java.util.logging.Logger;
  */
 public class ExtracaoCommit {
 
-    public static List<Commit> extract(GitHubClient client, RepositoryId repositoryId, Project project) {
+    public static List<Commit> extract(GitHubClient client, RepositoryId repositoryId, Project project) throws IOException {
         List<Commit> list = new LinkedList<>();
-        try {
-            //Basic authentication
-            CommitService commitService = new CommitService(client);
-            List<RepositoryCommit> commits = commitService.getCommits(repositoryId);
-            for (RepositoryCommit commit : commits) {
-               list.add(new Commit(commit, project));
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(ExtracaoIssue.class.getName()).log(Level.SEVERE, null, ex);
+        //Basic authentication
+        CommitService commitService = new CommitService(client);
+        List<RepositoryCommit> commits = commitService.getCommits(repositoryId);
+        for (RepositoryCommit commit : commits) {
+            list.add(new Commit(commit, project));
         }
         return list;
     }
@@ -55,5 +51,5 @@ public class ExtracaoCommit {
             }
         }
     }
-    
+
 }
