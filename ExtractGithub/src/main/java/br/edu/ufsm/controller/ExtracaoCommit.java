@@ -4,6 +4,7 @@ package br.edu.ufsm.controller;
 
 import br.edu.ufsm.model.Commit;
 import br.edu.ufsm.model.Project;
+import br.edu.ufsm.persistence.CommitCommentDao;
 import br.edu.ufsm.persistence.CommitDao;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.RepositoryId;
@@ -15,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.eclipse.egit.github.core.CommitComment;
 
 /**
  *
@@ -33,22 +35,24 @@ public class ExtracaoCommit {
         return list;
     }
 
-    public static void extract(GitHubClient client, RepositoryId repositoryId, List<String> commits, CommitDao commitDao, Project project) {
+    public static void extractComments(GitHubClient client, RepositoryId repositoryId, List<String> commits, CommitCommentDao dao) {
         //Basic authentication
         CommitService commitService = new CommitService(client);
-        Commit commitD;
-        RepositoryCommit commit;
         for (String idCommit : commits) {
+            List<CommitComment> comments = null;
             try {
-                commit = commitService.getCommit(repositoryId, idCommit);
-                commitD = new Commit(commit, project);
-                commitDao.merge(commitD);
-                Logger.getGlobal().info(commitD.getSha());
-            } catch (Exception ex) {
-                Logger.getGlobal().info("Impossivel baixar commit: " + idCommit + "\n\n" + ex.getMessage());
-            } catch (OutOfMemoryError ex) {
-                Logger.getGlobal().info("Estouro de Memória: " + idCommit + "\n\n" + ex.getMessage());
+                comments = commitService.getComments(repositoryId, idCommit);
+            } catch (IOException ex) {
+                System.out.println("Error in get comments of commit: "+ ex.getMessage());
             }
+            comments.stream().map((comentario) -> {
+                Commit commit = new Commit();
+                commit.setSha(idCommit);
+                br.edu.ufsm.model.CommitComment c = new br.edu.ufsm.model.CommitComment(comentario, commit);
+                return c;
+            }).forEachOrdered((c) -> {
+                dao.save(c);
+            });
         }
     }
 

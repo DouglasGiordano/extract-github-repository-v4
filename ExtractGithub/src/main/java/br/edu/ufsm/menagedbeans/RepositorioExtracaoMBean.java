@@ -112,7 +112,7 @@ public class RepositorioExtracaoMBean implements Serializable {
         this.message = "Starting extract of commit file";
         atualizarProgresso(0, 100);
         RepositoryId repo = new RepositoryId(project.getOwner().getLogin(), project.getName());
-        List<String> commits = commitDao.getCommits(project.getId());
+        List<String> commits = commitDao.getCommitsNotFile(project.getId());
         CommitService commitService = new CommitService(client);
         Commit commitD;
         RepositoryCommit commit;

@@ -25,6 +25,8 @@ public class CommitFile implements Serializable, EntityBD {
     private int additions;
     private int changes;
     private int deletions;
+    @Lob
+    @Column(length = 10000)
     private String blobUrl;
     private String filename;
     @Lob
@@ -35,7 +37,7 @@ public class CommitFile implements Serializable, EntityBD {
     private String status;
     @ManyToOne(cascade = CascadeType.ALL)
     private Commit commit;
-    
+
     public CommitFile() {
     }
 
@@ -50,7 +52,7 @@ public class CommitFile implements Serializable, EntityBD {
         this.rawUrl = commitFile.getRawUrl();
         this.sha = commitFile.getSha();
         this.status = commitFile.getStatus();
-        this.id = this.status+this.changes+this.deletions+this.additions+ shaCommit + this.filename+ this.sha;
+        this.id = this.status + this.changes + this.deletions + this.additions + shaCommit + this.filename + this.sha;
     }
 
     /**

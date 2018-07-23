@@ -14,7 +14,7 @@
     </ui:define>
 
     <ui:define name="body">
-        <ufsm:card title="User registration" size="col-lg-12">
+        <ufsm:card title="User registration" size="col-lg-12" id="users">
 
             <div class="row">
                 <ufsm:inputText value="#{settingsbean.user.usuario}" maxlength="30" name="User" required="true">
@@ -26,7 +26,7 @@
             </div>
             <h:commandButton value="Add"
                              class="btn btn-outline-info" actionListener="#{settingsbean.adicionar()}">
-                <f:ajax execute=":form" render="@form"/>
+                <f:ajax execute="@this :form:cardSentiStrength" render="@form"/>
             </h:commandButton>
             <br/>
             <br/>

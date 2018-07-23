@@ -32,11 +32,15 @@
 
             <p>Select download content</p>
             <h:selectBooleanCheckbox id="checkcommit" value="#{extractrepositoriesmbean.checkDownloadContent.commit}" /> Commit
-            <h:selectBooleanCheckbox id="checkcommitfile" value="#{extractrepositoriesmbean.checkDownloadContent.commitFiles}" /> Files Commit           
+            <h:selectBooleanCheckbox id="checkcommitfile" value="#{extractrepositoriesmbean.checkDownloadContent.commitFiles}" /> File Commit           
+            <h:selectBooleanCheckbox id="checkcommitcomment" value="#{extractrepositoriesmbean.checkDownloadContent.commitComment}" /> Comment Commit           
             <h:selectBooleanCheckbox id="checkissue" value="#{extractrepositoriesmbean.checkDownloadContent.issue}" /> Issue
-            <h:selectBooleanCheckbox id="checkissuecomment" value="#{extractrepositoriesmbean.checkDownloadContent.issueComment}" /> Issue Comments            
-            <h:selectBooleanCheckbox id="checkevent" value="#{extractrepositoriesmbean.checkDownloadContent.event}" /> Events 
-            <h:selectBooleanCheckbox id="checkeventissue" value="#{extractrepositoriesmbean.checkDownloadContent.eventIssue}" /> Events Issue 
+            <h:selectBooleanCheckbox id="checkissuecomment" value="#{extractrepositoriesmbean.checkDownloadContent.issueComment}" /> Issue Comment            
+            <h:selectBooleanCheckbox id="checkevent" value="#{extractrepositoriesmbean.checkDownloadContent.event}" /> Event 
+            <h:selectBooleanCheckbox id="checkeventissue" value="#{extractrepositoriesmbean.checkDownloadContent.eventIssue}" /> Event Issue 
+            <p>Select analysis content</p>
+            <h:selectBooleanCheckbox id="checkcommitfeeling" value="#{extractrepositoriesmbean.checkAnalysisContent.commitFeeling}" /> Commit Feeling
+            <h:selectBooleanCheckbox id="checkissuefeeling" value="#{extractrepositoriesmbean.checkAnalysisContent.issueFeeling}" /> Issue Feeling
             <hr/>
             <ufsm:inputTextArea id="projects" rows="20"
                                 name="Repositories" required="true"
@@ -47,7 +51,8 @@
                              action="#{extractrepositoriesmbean.extractRepositories()}"
                              >
                 <f:ajax execute="form:projects form:checkcommit form:checkcommitfile 
-                        form:checkissue form:checkissuecomment form:checkevent form:checkeventissue"
+                        form:checkissue form:checkissuecomment form:checkevent form:checkeventissue 
+                        form:checkcommitcomment form:checkcommitfeeling form:checkissuefeeling"
                         render="form" />
             </h:commandButton>
         </h:panelGroup>
@@ -91,7 +96,7 @@
         <h:panelGroup id="panelPoll" rendered="#{not empty extractrepositoriesmbean.projects}">
             <p:poll id="poll" interval="1" listener="#{extractrepositoriesmbean.checkStatus}"/>
         </h:panelGroup>
-        <h:commandButton value="Get Issues"
+        <h:commandButton value="Download Data"
                          class="btn btn-outline-warning   btn-block"
                          action="#{extractrepositoriesmbean.extract()}"
                          onclick=""

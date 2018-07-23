@@ -9,6 +9,7 @@ import br.edu.ufsm.controller.ExtracaoRepository;
 import br.edu.ufsm.model.*;
 import br.edu.ufsm.model.event.Event;
 import br.edu.ufsm.model.event.EventIssue;
+import br.edu.ufsm.persistence.CommitCommentDao;
 import br.edu.ufsm.persistence.CommitDao;
 import br.edu.ufsm.persistence.EventDao;
 import br.edu.ufsm.persistence.EventIssueDao;
@@ -57,6 +58,8 @@ public class ExtractRepositoriesMBean implements Serializable {
     private EventIssueDao eventIssueDao;
     @EJB
     private CommitDao commitDao;
+    @EJB
+    private CommitCommentDao commitCommentDao;
 
     private String list;
     private List<Project> projects;
@@ -69,6 +72,7 @@ public class ExtractRepositoriesMBean implements Serializable {
     private static final Logger LOGGER = Logger.getLogger(ExtractRepositoriesMBean.class.getName());
     private SentiStrength sentiStrength;
     private CheckDownloadContent checkDownloadContent;
+    private CheckAnalysisContent checkAnalysisContent;
 
     /**
      * Creates a new instance of ExtrairMBean
@@ -86,10 +90,12 @@ public class ExtractRepositoriesMBean implements Serializable {
         projects = new ArrayList<>();
         projectsStatus = new HashMap<>();
         checkDownloadContent = new CheckDownloadContent();
-//        sentiStrength = new SentiStrength();
-//        String ssthInitialisation[] = {"sentidata", "/home/gpscom/data_2015/", "explain"};
-//
-//        sentiStrength.initialise(ssthInitialisation);
+        ClassLoader classLoader = getClass().getClassLoader();
+        String localizacaoSchemas = classLoader.getResource("sentistrength/data_2015").getPath().replaceAll("sentistrength/data_2015/", "sentistrength/data_2015");
+        sentiStrength = new SentiStrength();
+        String ssthInitialisation[] = {"sentidata", localizacaoSchemas, "explain"};
+
+        sentiStrength.initialise(ssthInitialisation);
     }
 
     public void extractRepositories() {
@@ -128,10 +134,18 @@ public class ExtractRepositoriesMBean implements Serializable {
             checkExtractEventIssue(project);
             checkExtractCommit(project);
             checkExtractCommitFile(project);
+            checkExtractCommitComment(project);
+            checkCommitfeeling(project);
+            checkIssuefeeling(project);
             this.setProjectEnd(project);
             projectsStatus.put(project, "Completed");
         }
         this.setProjectNow(null);
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ExtractRepositoriesMBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
         context.execute("PF('pool').stop()");
         Message.printMessageInfo("Extraction of repositories Completed");
     }
@@ -219,6 +233,32 @@ public class ExtractRepositoriesMBean implements Serializable {
             } catch (IOException ex) {
                 printError(project, ex);
             }
+        }
+    }
+
+    public void checkExtractCommitComment(Project project) {
+        if (checkDownloadContent.isCommitComment()) {
+            try {
+                extrairCommentCommit(project);
+            } catch (RequestException ex) {
+                verificarCredenciais();
+                printError(project, ex);
+                checkExtractCommitFile(project);
+            } catch (IOException ex) {
+                printError(project, ex);
+            }
+        }
+    }
+
+    public void checkCommitfeeling(Project project) {
+        if (checkAnalysisContent.isCommitFeeling()) {
+            analysisFeelingCommit(project);
+        }
+    }
+
+    public void checkIssuefeeling(Project project) {
+        if (checkAnalysisContent.isIssueFeeling()) {
+            analysisFeelingIssue(project);
         }
     }
 
@@ -328,7 +368,7 @@ public class ExtractRepositoriesMBean implements Serializable {
     public void extrairFilesCommit(Project projeto) throws IOException {
         projectsStatus.put(projeto, "Starting extract of commit file");
         RepositoryId repo = new RepositoryId(projeto.getOwner().getLogin(), projeto.getName());
-        List<String> commits = commitDao.getCommits(projeto.getId());
+        List<String> commits = commitDao.getCommitsNotFile(projeto.getId());
         CommitService commitService = new CommitService(client);
         Commit commitD;
         RepositoryCommit commit;
@@ -349,8 +389,41 @@ public class ExtractRepositoriesMBean implements Serializable {
                 printError(projeto, ex);
             }
         }
-        projectsStatus.put(projeto, "Extraction Completed");
-        projectsStatus.put(projeto, "The extraction was successful.");
+        projectsStatus.put(projeto, "Extraction Completed commit file");
+        projectsStatus.put(projeto, "The extraction was successful commit file");
+    }
+
+    public void extrairCommentCommit(Project projeto) throws IOException {
+        projectsStatus.put(projeto, "Starting extract of commit comment");
+        RepositoryId repo = new RepositoryId(projeto.getOwner().getLogin(), projeto.getName());
+        List<String> commits = commitDao.getCommitsNotComment(projeto.getId());
+        CommitService commitService = new CommitService(client);
+        int i = 0;
+        int total = commits.size();
+        for (String id : commits) {
+            i++;
+            List<org.eclipse.egit.github.core.CommitComment> comments = null;
+            comments = commitService.getComments(repo, id);
+            comments.stream().map((comentario) -> {
+                Commit commit = commitDao.getById(id, Commit.class);
+                br.edu.ufsm.model.CommitComment c = new br.edu.ufsm.model.CommitComment(comentario, commit);
+                return c;
+            }).forEachOrdered((c) -> {
+                try {
+                    commitCommentDao.save(c);
+                } catch (PersistenceException ex) {
+                    projectsStatus.put(projeto, "Erro: " + ex.getMessage());
+                    printError(projeto, ex);
+                } catch (Exception ex) {
+                    projectsStatus.put(projeto, "Erro: " + ex.getMessage());
+                    printError(projeto, ex);
+                }
+
+            });
+            projectsStatus.put(projeto, "Extracting " + i + " of " + total);
+        }
+        projectsStatus.put(projeto, "Extraction Completed commit comment");
+        projectsStatus.put(projeto, "The extraction was successful commit comment");
     }
 
     public Project extrairIssueComment(Project projeto) throws IOException {
@@ -401,7 +474,7 @@ public class ExtractRepositoriesMBean implements Serializable {
         LOGGER.log(Level.INFO, mensagem);
     }
 
-    public void analisarSentimentos(Project projeto) {
+    public void analysisFeelingIssue(Project projeto) {
         projectsStatus.put(projeto, "Initiating issue comment feelings analysis");
         projectsStatus.put(projeto, "Senti Strength started");
         List<Long> issues = getIssueDao().getIssuesId(projeto.getId());
@@ -411,39 +484,45 @@ public class ExtractRepositoriesMBean implements Serializable {
             i++;
             Issue issue = (Issue) getIssueDao().getByIdO(idIssue.longValue(), Issue.class);
             List<IssueComment> comentarios = issue.getIssueComments();
-            projectsStatus.put(projeto, "Analyzing comment" + i + " of " + total);
+            projectsStatus.put(projeto, "Analyzing issue " + i + " of " + total);
             for (IssueComment comment : comentarios) {
-                String resultado = sentiStrength.computeSentimentScores(comment.getBody()).substring(0, 4);
+                String resultado = this.sentiStrength.computeSentimentScores(comment.getBody()).substring(0, 4);
                 getSentimento(comment.getSentimento(), resultado);
             }
+            String resultado = this.sentiStrength.computeSentimentScores(issue.getTitle() + " " + issue.getBodyText()).substring(0, 4);
+            getSentimento(issue.getSentimento(), resultado);
             getIssueDao().merge(issue);
         }
         projectsStatus.put(projeto, "The analysis issue comment was successful.");
     }
 
-    public void analisarSentimentosIssue(Project projeto) {
-        projectsStatus.put(projeto, "Initiating issue feelings analysis");
-        SentiStrength sentiStrength = new SentiStrength();
-        String ssthInitialisation[] = {"sentidata", "/home/gpscom/data_2015/", "explain"};
-        sentiStrength.initialise(ssthInitialisation);
+    public void analysisFeelingCommit(Project projeto) {
+        projectsStatus.put(projeto, "Initiating commit feelings analysis");
         projectsStatus.put(projeto, "Senti Strength started");
-        List<Long> issues = getIssueDao().getIssuesAll(projeto.getId());
+        List<String> issues = commitDao.getCommitsId(projeto.getId());
         int i = 0;
         int total = issues.size();
-        for (Long idIssue : issues) {
+        for (String id : issues) {
             i++;
-            projectsStatus.put(projeto, "Analyzing issue" + i + " of " + total);
-            Issue issue = (Issue) getIssueDao().getByIdO(idIssue.longValue(), Issue.class);
+            projectsStatus.put(projeto, "Analyzing commit " + i + " of " + total);
+
             try {
-                String resultado = sentiStrength.computeSentimentScores(issue.getTitle() + " " + issue.getBodyText()).substring(0, 4);
-                getSentimento(issue.getSentimento(), resultado);
-                getIssueDao().merge(issue);
+                Commit commit = (Commit) commitDao.getByIdO(id, Commit.class);
+                String resultado = this.sentiStrength.computeSentimentScores(commit.getMessage()).substring(0, 4);
+                getSentimento(commit.getSentimento(), resultado);
+                commitDao.merge(commit);
+                List<CommitComment> comentarios = commitCommentDao.getComments(commit);
+                for (CommitComment comment : comentarios) {
+                    String resultadoC = this.sentiStrength.computeSentimentScores(comment.getBodyText()).substring(0, 4);
+                    getSentimento(comment.getSentimento(), resultadoC);
+                    commitCommentDao.save(comment);
+                }
             } catch (Exception ex) {
                 projectsStatus.put(projeto, "Error: " + ex.getMessage());
                 printError(projeto, ex);
             }
         }
-        projectsStatus.put(projeto, "The analysis issue was successful.");
+        projectsStatus.put(projeto, "The analysis commit was successful.");
     }
 
     public String getMessageStatus(Project p) {
@@ -596,5 +675,19 @@ public class ExtractRepositoriesMBean implements Serializable {
      */
     public void setCheckDownloadContent(CheckDownloadContent checkDownloadContent) {
         this.checkDownloadContent = checkDownloadContent;
+    }
+
+    /**
+     * @return the checkAnalysisContent
+     */
+    public CheckAnalysisContent getCheckAnalysisContent() {
+        return checkAnalysisContent;
+    }
+
+    /**
+     * @param checkAnalysisContent the checkAnalysisContent to set
+     */
+    public void setCheckAnalysisContent(CheckAnalysisContent checkAnalysisContent) {
+        this.checkAnalysisContent = checkAnalysisContent;
     }
 }

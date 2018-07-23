@@ -43,10 +43,17 @@ public class CommitDao extends NewPersistence<Commit, String> {
         return this.object;
     }
 
-    public List<String> getCommits(long idProject) {
+    public List<String> getCommitsNotFile(long idProject) {
         Query q = getEntity().createNativeQuery("SELECT DISTINCT(commit.sha) "
                 + "FROM commit "
                 + "LEFT JOIN commit_file ON commit.sha = commit_file.commit_sha where isnull(commit_file.id) and project_id = " + idProject + "");
+        return q.getResultList();
+    }
+
+    public List<String> getCommitsNotComment(long idProject) {
+        Query q = getEntity().createNativeQuery("SELECT DISTINCT(commit.sha) "
+                + "FROM commit "
+                + "LEFT JOIN commit_comment ON commit.sha = commit_comment.commit_sha where isnull(commit_comment.id) and project_id = " + idProject + "");
         return q.getResultList();
     }
 

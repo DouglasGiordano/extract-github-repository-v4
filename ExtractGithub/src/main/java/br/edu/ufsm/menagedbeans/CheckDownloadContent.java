@@ -14,6 +14,7 @@ public class CheckDownloadContent {
     private boolean eventIssue;
     private boolean commit;
     private boolean commitFiles;
+    private boolean commitComment;
     private boolean issue;
     private boolean issueComment;
 }
