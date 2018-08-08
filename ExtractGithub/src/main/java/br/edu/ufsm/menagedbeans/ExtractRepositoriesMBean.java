@@ -90,8 +90,9 @@ public class ExtractRepositoriesMBean implements Serializable {
         projects = new ArrayList<>();
         projectsStatus = new HashMap<>();
         checkDownloadContent = new CheckDownloadContent();
+        checkAnalysisContent = new CheckAnalysisContent();
         ClassLoader classLoader = getClass().getClassLoader();
-        String localizacaoSchemas = classLoader.getResource("sentistrength/data_2015").getPath().replaceAll("sentistrength/data_2015/", "sentistrength/data_2015");
+        String localizacaoSchemas = classLoader.getResource("sentistrength/data_2015").getPath();
         sentiStrength = new SentiStrength();
         String ssthInitialisation[] = {"sentidata", localizacaoSchemas, "explain"};
 
@@ -142,7 +143,7 @@ public class ExtractRepositoriesMBean implements Serializable {
         }
         this.setProjectNow(null);
         try {
-            Thread.sleep(3000);
+            Thread.sleep(30000);
         } catch (InterruptedException ex) {
             Logger.getLogger(ExtractRepositoriesMBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -467,7 +468,8 @@ public class ExtractRepositoriesMBean implements Serializable {
 
     private void printError(Project project, Exception ex) {
         String mensagem = "Error " + " in project " + project.getId() + " " + project.getName() + " " + project.getUrl();
-        LOGGER.log(Level.WARNING, mensagem, ex);
+        mensagem += "\nProgress: " + projectsStatus.get(project);
+        LOGGER.log(Level.WARNING, mensagem, ex.getMessage());
     }
 
     private void printInfo(String mensagem) {
