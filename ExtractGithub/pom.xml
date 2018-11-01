@@ -40,7 +40,6 @@
             <artifactId>javaee-web-api</artifactId>
             <version>8.0</version>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/com.vdurmont/emoji-java -->
         <dependency>
             <groupId>com.vdurmont</groupId>
@@ -69,6 +68,13 @@
             <artifactId>primefaces</artifactId>
             <version>6.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.primefaces.themes/bootstrap -->
+        <dependency>
+            <groupId>org.primefaces.themes</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>1.0.10</version>
+        </dependency>
+
         <dependency>
             <groupId>net.bootsfaces</groupId>
             <artifactId>bootsfaces</artifactId>
@@ -111,6 +117,12 @@
             <version>1.16.22</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.graphql-java/graphql-java -->
+        <dependency>
+            <groupId>com.graphql-java</groupId>
+            <artifactId>graphql-java</artifactId>
+            <version>2018-09-03T01-10-42-4485074</version>
+        </dependency>
 
     </dependencies>
     <repositories>
@@ -123,6 +135,10 @@
         <repository>
             <id>oss.sonatype.org</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>primefaces</id>
+            <url>http://repository.primefaces.org//</url>
         </repository>
     </repositories>
     <build>

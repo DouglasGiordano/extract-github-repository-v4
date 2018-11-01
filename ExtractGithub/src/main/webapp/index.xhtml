@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
@@ -9,6 +9,31 @@
                 template="template.xhtml"
                 xmlns:ufsm="http://xmlns.jcp.org/jsf/composite/ufsm">
     <ui:define name="head">
+        <script>
+            fetch('https://api.github.com/graphql', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': '524396afd5ee7708eece891bd5ae822a23414496'
+                },
+                body: JSON.stringify({query:
+                            "{\
+  viewer {\
+    login\
+  }\
+  rateLimit {\
+    limit\
+    cost\
+    remaining\
+    resetAt\
+  }\
+}"})
+            })
+                    .then(r => r.json())
+                    .then(data => console.log('data returned:', data));
+            alert("Testando execução metodo");
+        </script>
         <section class="dashboard-counts section-padding">
             <div class="container-fluid">
                 <div class="row">
@@ -63,7 +88,7 @@
         <br/>
 
         <h:dataTable id="tbl" value="#{repositoriobean.projects}" var="o" styleClass="table"
-        >
+                     >
 
             <h:column>
                 <!-- column header -->
@@ -74,17 +99,17 @@
 
             <h:column>
                 <f:facet name="header">Name</f:facet>
-                #{o.name}
+                    #{o.name}
             </h:column>
 
             <h:column>
                 <f:facet name="header">Created at</f:facet>
-                #{o.createdAt}
+                    #{o.createdAt}
             </h:column>
 
             <h:column>
                 <f:facet name="header">URL</f:facet>
-                #{o.url}
+                    #{o.url}
             </h:column>
             <h:column>
                 <f:facet name="header">Options</f:facet>
@@ -94,9 +119,9 @@
             </h:column>
         </h:dataTable>
         <script type="text/javascript" charset="utf-8">
-            $(document).ready(function() {
+            $(document).ready(function () {
                 $('#form\\:tbl').dataTable();
-            } );
+            });
         </script>
     </ui:define>
     <ui:define name="modal">

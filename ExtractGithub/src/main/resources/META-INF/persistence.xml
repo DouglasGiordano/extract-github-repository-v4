@@ -8,9 +8,9 @@
         <jta-data-source>jdbc/extractgithubds</jta-data-source>
         <shared-cache-mode>ALL</shared-cache-mode>
         <properties>
-            <property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
+            <!--<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />-->
             <property name="eclipselink.ddl-generation.output-mode" value="database" />
-            <!--<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>-->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <!--<property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>-->
             <!--<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform" />-->
             <!--<property name="hibernate.hbm2ddl.auto" value="update"/>-->
