@@ -1,6 +1,6 @@
 /*
  */
-package br.edu.ufsm.requestpostgraphql;
+package br.edu.ufsm.requestpostgraphql.entity;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -20,7 +20,7 @@ import lombok.Data;
  */
 @Entity
 @Data
-public class Status implements Serializable {
+public class Status implements Serializable, InterfaceStatus {
 
     @Id
     @GeneratedValue
@@ -38,6 +38,9 @@ public class Status implements Serializable {
     private String errorQuery;
     private String owner;
     private String name;
+
+    public Status() {
+    }
 
     public Status(String owner, String name) {
         this.owner = owner;

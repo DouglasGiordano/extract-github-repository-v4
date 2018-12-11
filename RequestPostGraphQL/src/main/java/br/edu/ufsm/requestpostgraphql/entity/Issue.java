@@ -1,6 +1,6 @@
 /*
  */
-package br.edu.ufsm.requestpostgraphql;
+package br.edu.ufsm.requestpostgraphql.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;

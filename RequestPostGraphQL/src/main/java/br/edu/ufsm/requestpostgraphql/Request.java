@@ -5,22 +5,21 @@
  */
 package br.edu.ufsm.requestpostgraphql;
 
+import br.edu.ufsm.requestpostgraphql.entity.PullRequest;
+import br.edu.ufsm.requestpostgraphql.entity.Status;
+import br.edu.ufsm.requestpostgraphql.entity.Complex;
+import br.edu.ufsm.requestpostgraphql.entity.HasNext;
+import br.edu.ufsm.requestpostgraphql.entity.Issue;
+import br.edu.ufsm.requestpostgraphql.entity.Repository;
+import br.edu.ufsm.requestpostgraphql.service.BranchService;
+import br.edu.ufsm.requestpostgraphql.service.CommitService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Stream;
-import org.apache.http.Header;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,15 +29,14 @@ import org.json.JSONObject;
  */
 public class Request {
 
-    private final String url = "https://api.github.com/graphql";
-    private int tokenNow = 1;
-    private final String[] tokens = {"406a7772a30e9a9e28c7a95b8d4b26cafbe1b339",
-        "524396afd5ee7708eece891bd5ae822a23414496", "ea73ffe6e846ea887eaed9a11ab5759d8fb88962", "8e42a97bfca09213c1a3129506c72e4b729ddaec"};
     private String query = "";
     private HasNext hasNextPull = new HasNext(true, "");
     private HasNext hasNextIssue = new HasNext(true, "");
     private Status statusProject;
-    private int tentativas = 0;
+
+    private CommitService commitService = new CommitService();
+    private BranchService branchService = new BranchService();
+
     public String getQuery(Repository repository) {
         Complex pullRequest = PullRequest.getQuery();
         Complex issue = Issue.getQuery();
@@ -70,7 +68,8 @@ public class Request {
     }
 
     public void extract(Repository r) {
-        JSONObject jsonResponse = this.getHttpClient(this.query);
+//        JSONObject jsonResponse = this.getHttpClient(this.query, statusProject);
+        JSONObject jsonResponse = null;
         if (jsonResponse != null) {
             this.getValues(jsonResponse, r);
             if (hasNext(jsonResponse)) {
@@ -78,7 +77,6 @@ public class Request {
                 extract(r);
             }
         }
-
     }
 
     public void getValues(JSONObject jsonObject, Repository r) {
@@ -130,7 +128,7 @@ public class Request {
         return hasNextPull.isHasNext() || hasNextIssue.isHasNext();
     }
 
-    public void getRepositories(List<Repository> repositories) throws JSONException {
+    public void getRepositoriesIssuePull(List<Repository> repositories) throws JSONException {
         for (Repository r : repositories) {
             System.out.println("Extract " + r.getOwner() + " - " + r.getName());
             this.statusProject = Status.find(r.getOwner(), r.getName());
@@ -145,79 +143,50 @@ public class Request {
                 this.hasNextPull = new HasNext(!this.statusProject.isCompletePull(), this.statusProject.getEndCursorPull());
                 this.query = getQueryEndCursor(r);
             }
-            if(!this.statusProject.isCompleteIssue() || !this.statusProject.isCompletePull()){
-              this.extract(r);  
+            if (!this.statusProject.isCompleteIssue() || !this.statusProject.isCompletePull()) {
+                this.extract(r);
             }
-            
+
+        }
+    }
+
+    public void getRepositoriesBranch(List<Repository> repositories) throws JSONException {
+        for (Repository r : repositories) {
+            System.out.println("Extract branch " + r.getOwner() + " - " + r.getName());
+            branchService.extractBranch(r);
+        }
+    }
+
+    public void getRepositoriesCommit(List<Repository> repositories) throws JSONException {
+        for (Repository r : repositories) {
+            System.out.println("Extract commit " + r.getOwner() + " - " + r.getName());
+            commitService.extractCommit(r);
         }
     }
 
     public static void main(String[] args) throws Exception {
         Request r = new Request();
         List<Repository> repositories = r.read();
-        r.getRepositories(repositories);
-    }
-    
-    public JSONObject getHttpClient(String query) {
-        CloseableHttpClient client = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost(url);
-
-        // Create some NameValuePair for HttpPost parameters
-        Header header[] = new BasicHeader[2];
-        header[0] = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-        header[1] = new BasicHeader("Authorization", "bearer " + tokens[tokenNow]);
-        post.setHeaders(header);
-        try {
-            post.setEntity(new StringEntity(query));
-            HttpResponse response = client.execute(post);
-
-            // Print out the response message
-            String jsonResponse = EntityUtils.toString(response.getEntity());
-            try {
-                JSONObject o = new JSONObject(jsonResponse);
-                if (verifyLimitNow(o)) {
-                    if (tokenNow == (tokens.length - 1)) {
-                        tokenNow = 0;
-                    } else {
-                        tokenNow = tokenNow + 1;
-                    }
-                }
-                if (o.isNull("data")) {
-                    System.out.println("Data is null, query: " + jsonResponse);
-                    statusProject.setErrorResponse(jsonResponse);
-                    statusProject.setErrorQuery(this.query);
-                    statusProject = statusProject.save();
-                    return null;
-                }
-                if (o.getJSONObject("data").isNull("repository")) {
-                    System.out.println("Data is null, query: " + jsonResponse);
-                    statusProject.setErrorResponse(jsonResponse);
-                    statusProject.setErrorQuery(this.query);
-                    statusProject = statusProject.save();
-                    return null;
-                }
-                tentativas = 0;
-                return o;
-            } catch (JSONException ex) {
-                System.out.println("Error in get object json extract: " + ex.getMessage());
-                statusProject.setError("Error in get object json extract: " + ex.getMessage());
-                statusProject.setErrorResponse(jsonResponse);
-                statusProject.setErrorQuery(this.query);
-                statusProject = statusProject.save();
-                tentativas = tentativas+1;
-                if(tentativas == 3){
-                    tentativas = 0;
-                    return null;
-                }
-                return getHttpClient(query);
+        int option = 0;
+        while (option != 4) {
+            System.out.println("Digite: ");
+            System.out.println("1 - Issue e Pull | 2 - Branchs | 3 - Commits | 4 - Sair");
+            Scanner reader = new Scanner(System.in);
+            option = reader.nextInt();
+            switch (option) {
+                case 1:
+                    r.getRepositoriesIssuePull(repositories);
+                    break;
+                case 2:
+                    r.getRepositoriesBranch(repositories);
+                    break;
+                case 3:
+                    r.getRepositoriesCommit(repositories);
+                    break;
+                case 4:
+                    System.exit(1);
             }
-
-        } catch (org.apache.http.NoHttpResponseException ex) {
-            ex.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-        return null;
+        }
     }
 
 }

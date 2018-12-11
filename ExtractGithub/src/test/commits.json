@@ -1,0 +1,241 @@
+{
+  "data": {
+    "repository": {
+      "branch1": {
+        "target": {
+          "history": {
+            "totalCount": 8,
+            "nodes": [
+              {
+                "id": "MDY6Q29tbWl0MTMwOTcyOTYwOjdjMDU5OThjMzY4MzQ2NmI4Y2E0NmRiYmY0YWViZmI2ZDAzZWYyODU=",
+                "abbreviatedOid": "7c05998",
+                "oid": "7c05998c3683466b8ca46dbbf4aebfb6d03ef285",
+                "additions": 2264,
+                "deletions": 18,
+                "changedFiles": 231,
+                "committer": {
+                  "user": {
+                    "login": "DouglasMontanhaGiordano"
+                  }
+                },
+                "authoredByCommitter": true,
+                "authoredDate": "2018-11-01T05:25:31Z",
+                "committedDate": "2018-11-01T05:25:31Z",
+                "commitResourcePath": "/DouglasGiordano/repository_analisys/commit/7c05998c3683466b8ca46dbbf4aebfb6d03ef285",
+                "commitUrl": "https://github.com/DouglasGiordano/repository_analisys/commit/7c05998c3683466b8ca46dbbf4aebfb6d03ef285",
+                "committedViaWeb": false,
+                "resourcePath": "/DouglasGiordano/repository_analisys/commit/7c05998c3683466b8ca46dbbf4aebfb6d03ef285",
+                "status": null,
+                "url": "https://github.com/DouglasGiordano/repository_analisys/commit/7c05998c3683466b8ca46dbbf4aebfb6d03ef285",
+                "message": "Adicionado suporte a versão 4 da api do github para extração de pull e issues.",
+                "author": {
+                  "user": {
+                    "login": "DouglasMontanhaGiordano"
+                  }
+                }
+              },
+              {
+                "id": "MDY6Q29tbWl0MTMwOTcyOTYwOjRiMjI4YWQ0ZjhjZmM1OTU5MjY2YWE5M2FlZGZiMTVmYjgyMDIzZTk=",
+                "abbreviatedOid": "4b228ad",
+                "oid": "4b228ad4f8cfc5959266aa93aedfb15fb82023e9",
+                "additions": 6,
+                "deletions": 3,
+                "changedFiles": 2,
+                "committer": {
+                  "user": {
+                    "login": "DouglasMontanhaGiordano"
+                  }
+                },
+                "authoredByCommitter": true,
+                "authoredDate": "2018-08-08T16:09:27Z",
+                "committedDate": "2018-08-08T16:09:27Z",
+                "commitResourcePath": "/DouglasGiordano/repository_analisys/commit/4b228ad4f8cfc5959266aa93aedfb15fb82023e9",
+                "commitUrl": "https://github.com/DouglasGiordano/repository_analisys/commit/4b228ad4f8cfc5959266aa93aedfb15fb82023e9",
+                "committedViaWeb": false,
+                "resourcePath": "/DouglasGiordano/repository_analisys/commit/4b228ad4f8cfc5959266aa93aedfb15fb82023e9",
+                "status": null,
+                "url": "https://github.com/DouglasGiordano/repository_analisys/commit/4b228ad4f8cfc5959266aa93aedfb15fb82023e9",
+                "message": "Correção das mensagens.",
+                "author": {
+                  "user": {
+                    "login": "DouglasMontanhaGiordano"
+                  }
+                }
+              },
+              {
+                "id": "MDY6Q29tbWl0MTMwOTcyOTYwOmYwMTYwNzA1NjNjN2U0NjRiZThjNDg0Y2JhMWNmZmMzNjEzZjM4YTQ=",
+                "abbreviatedOid": "f016070",
+                "oid": "f016070563c7e464be8c484cba1cffc3613f38a4",
+                "additions": 122629,
+                "deletions": 46,
+                "changedFiles": 33,
+                "committer": {
+                  "user": {
+                    "login": "DouglasMontanhaGiordano"
+                  }
+                },
+                "authoredByCommitter": true,
+                "authoredDate": "2018-07-23T06:20:29Z",
+                "committedDate": "2018-07-23T06:20:29Z",
+                "commitResourcePath": "/DouglasGiordano/repository_analisys/commit/f016070563c7e464be8c484cba1cffc3613f38a4",
+                "commitUrl": "https://github.com/DouglasGiordano/repository_analisys/commit/f016070563c7e464be8c484cba1cffc3613f38a4",
+                "committedViaWeb": false,
+                "resourcePath": "/DouglasGiordano/repository_analisys/commit/f016070563c7e464be8c484cba1cffc3613f38a4",
+                "status": null,
+                "url": "https://github.com/DouglasGiordano/repository_analisys/commit/f016070563c7e464be8c484cba1cffc3613f38a4",
+                "message": "Extract comments commit and add data sentistreng to projetct.",
+                "author": {
+                  "user": {
+                    "login": "DouglasMontanhaGiordano"
+                  }
+                }
+              },
+              {
+                "id": "MDY6Q29tbWl0MTMwOTcyOTYwOjE1ZTRhODEzYmU2N2EyZDI0MzYyZjI0NjNhNzQyMTBkNWYyMDM0NDU=",
+                "abbreviatedOid": "15e4a81",
+                "oid": "15e4a813be67a2d24362f2463a74210d5f203445",
+                "additions": 186,
+                "deletions": 119,
+                "changedFiles": 8,
+                "committer": {
+                  "user": {
+                    "login": "DouglasMontanhaGiordano"
+                  }
+                },
+                "authoredByCommitter": true,
+                "authoredDate": "2018-07-13T03:58:18Z",
+                "committedDate": "2018-07-13T03:58:18Z",
+                "commitResourcePath": "/DouglasGiordano/repository_analisys/commit/15e4a813be67a2d24362f2463a74210d5f203445",
+                "commitUrl": "https://github.com/DouglasGiordano/repository_analisys/commit/15e4a813be67a2d24362f2463a74210d5f203445",
+                "committedViaWeb": false,
+                "resourcePath": "/DouglasGiordano/repository_analisys/commit/15e4a813be67a2d24362f2463a74210d5f203445",
+                "status": null,
+                "url": "https://github.com/DouglasGiordano/repository_analisys/commit/15e4a813be67a2d24362f2463a74210d5f203445",
+                "message": "Correção no tamanho dos dados",
+                "author": {
+                  "user": {
+                    "login": "DouglasMontanhaGiordano"
+                  }
+                }
+              },
+              {
+                "id": "MDY6Q29tbWl0MTMwOTcyOTYwOjFkZDliMGY1YmVkMTg1OGZhNzU1ZGI3MzJkNTk4ZTA3OTJkMzI0YzM=",
+                "abbreviatedOid": "1dd9b0f",
+                "oid": "1dd9b0f5bed1858fa755db732d598e0792d324c3",
+                "additions": 1101,
+                "deletions": 45,
+                "changedFiles": 15,
+                "committer": {
+                  "user": {
+                    "login": "DouglasMontanhaGiordano"
+                  }
+                },
+                "authoredByCommitter": true,
+                "authoredDate": "2018-06-10T02:18:22Z",
+                "committedDate": "2018-06-10T02:18:22Z",
+                "commitResourcePath": "/DouglasGiordano/repository_analisys/commit/1dd9b0f5bed1858fa755db732d598e0792d324c3",
+                "commitUrl": "https://github.com/DouglasGiordano/repository_analisys/commit/1dd9b0f5bed1858fa755db732d598e0792d324c3",
+                "committedViaWeb": false,
+                "resourcePath": "/DouglasGiordano/repository_analisys/commit/1dd9b0f5bed1858fa755db732d598e0792d324c3",
+                "status": null,
+                "url": "https://github.com/DouglasGiordano/repository_analisys/commit/1dd9b0f5bed1858fa755db732d598e0792d324c3",
+                "message": "Adicionado extração de commits, arquivos e eventos ao baixar vários repositórios.",
+                "author": {
+                  "user": {
+                    "login": "DouglasMontanhaGiordano"
+                  }
+                }
+              },
+              {
+                "id": "MDY6Q29tbWl0MTMwOTcyOTYwOjg5YTRkODFjY2M3YTAxOGEzYTgxZTI3ZTRiMGYyOTI4NDA2MGU3ZGM=",
+                "abbreviatedOid": "89a4d81",
+                "oid": "89a4d81ccc7a018a3a81e27e4b0f29284060e7dc",
+                "additions": 131001,
+                "deletions": 24,
+                "changedFiles": 88,
+                "committer": {
+                  "user": {
+                    "login": "DouglasMontanhaGiordano"
+                  }
+                },
+                "authoredByCommitter": true,
+                "authoredDate": "2018-05-10T19:56:03Z",
+                "committedDate": "2018-05-10T19:56:03Z",
+                "commitResourcePath": "/DouglasGiordano/repository_analisys/commit/89a4d81ccc7a018a3a81e27e4b0f29284060e7dc",
+                "commitUrl": "https://github.com/DouglasGiordano/repository_analisys/commit/89a4d81ccc7a018a3a81e27e4b0f29284060e7dc",
+                "committedViaWeb": false,
+                "resourcePath": "/DouglasGiordano/repository_analisys/commit/89a4d81ccc7a018a3a81e27e4b0f29284060e7dc",
+                "status": null,
+                "url": "https://github.com/DouglasGiordano/repository_analisys/commit/89a4d81ccc7a018a3a81e27e4b0f29284060e7dc",
+                "message": "Init.",
+                "author": {
+                  "user": {
+                    "login": "DouglasMontanhaGiordano"
+                  }
+                }
+              },
+              {
+                "id": "MDY6Q29tbWl0MTMwOTcyOTYwOjAyZjVmYTQyNGE1YjgzOTgwNzY3ZDc1YWZmZTZlZDg2MWExYzY0MzA=",
+                "abbreviatedOid": "02f5fa4",
+                "oid": "02f5fa424a5b83980767d75affe6ed861a1c6430",
+                "additions": 365474,
+                "deletions": 0,
+                "changedFiles": 362,
+                "committer": {
+                  "user": {
+                    "login": "DouglasMontanhaGiordano"
+                  }
+                },
+                "authoredByCommitter": true,
+                "authoredDate": "2018-04-25T08:54:09Z",
+                "committedDate": "2018-04-25T08:54:09Z",
+                "commitResourcePath": "/DouglasGiordano/repository_analisys/commit/02f5fa424a5b83980767d75affe6ed861a1c6430",
+                "commitUrl": "https://github.com/DouglasGiordano/repository_analisys/commit/02f5fa424a5b83980767d75affe6ed861a1c6430",
+                "committedViaWeb": false,
+                "resourcePath": "/DouglasGiordano/repository_analisys/commit/02f5fa424a5b83980767d75affe6ed861a1c6430",
+                "status": null,
+                "url": "https://github.com/DouglasGiordano/repository_analisys/commit/02f5fa424a5b83980767d75affe6ed861a1c6430",
+                "message": "Projeto inicial.",
+                "author": {
+                  "user": {
+                    "login": "DouglasMontanhaGiordano"
+                  }
+                }
+              },
+              {
+                "id": "MDY6Q29tbWl0MTMwOTcyOTYwOjc0MGRhMTNiMzAwMWNjN2YwNGM2ZTJlZGUyMjU4NTFjYzdjNTU2NzY=",
+                "abbreviatedOid": "740da13",
+                "oid": "740da13b3001cc7f04c6e2ede225851cc7c55676",
+                "additions": 225,
+                "deletions": 0,
+                "changedFiles": 3,
+                "committer": {
+                  "user": null
+                },
+                "authoredByCommitter": false,
+                "authoredDate": "2018-04-25T08:13:00Z",
+                "committedDate": "2018-04-25T08:13:00Z",
+                "commitResourcePath": "/DouglasGiordano/repository_analisys/commit/740da13b3001cc7f04c6e2ede225851cc7c55676",
+                "commitUrl": "https://github.com/DouglasGiordano/repository_analisys/commit/740da13b3001cc7f04c6e2ede225851cc7c55676",
+                "committedViaWeb": true,
+                "resourcePath": "/DouglasGiordano/repository_analisys/commit/740da13b3001cc7f04c6e2ede225851cc7c55676",
+                "status": null,
+                "url": "https://github.com/DouglasGiordano/repository_analisys/commit/740da13b3001cc7f04c6e2ede225851cc7c55676",
+                "message": "Initial commit",
+                "author": {
+                  "user": {
+                    "login": "DouglasGiordano"
+                  }
+                }
+              }
+            ],
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "7c05998c3683466b8ca46dbbf4aebfb6d03ef285 7"
+            }
+          }
+        }
+      }
+    }
+  }
+}
