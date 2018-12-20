@@ -1,5 +1,6 @@
 package br.edu.ufsm.requestpostgraphql.service;
 
+import br.edu.ufsm.requestpostgraphql.entity.Message;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +25,10 @@ public class RequestService {
     private final String[] tokens = {"",""};
     private int tokenNow = 1;
     private final String url = "https://api.github.com/graphql";
-    private int tentativas = 0;
+
+    public RequestService() {
+        LoadManagement.getInstance().init();
+    }
 
     public JSONObject getHttpClient(String query) {
         CloseableHttpClient client = HttpClientBuilder.create().build();
@@ -44,36 +48,31 @@ public class RequestService {
             JSONObject o = null;
             try {
                 o = new JSONObject(jsonResponse);
-                if (o == null || o.isNull("data")) {
-                    System.out.println("Data is null, query: " + jsonResponse);
-                    return null;
+                if (o == null || !o.isNull("errors")) {
+                    throw new JSONException("");
                 }
 
                 if (verifyLimitNow(o)) {
                     changeHashAtive();
                 }
-
-                if (o.getJSONObject("data").isNull("repository")) {
-                    System.out.println("Data is null, query: " + jsonResponse);
-                    return null;
-                }
             } catch (JSONException ex) {
-                System.out.println("Error in get object json extract: " + ex.getMessage());
-                tentativas = tentativas + 1;
-                if (tentativas == 3) {
-                    tentativas = 0;
-                    return null;
+                LoadManagement.getInstance().setHeavyLoad(true);
+                LoadManagement.getInstance().breaking();
+                Message.printError(jsonResponse.toString());
+                Message.printError("(" + LoadManagement.getInstance().getWeight() + ") decreasing weight...");
+                if (LoadManagement.getInstance().isHeavyLoad()) {
+                    LoadManagement.getInstance().decrease();
                 }
-                return getHttpClient(query);
+                return null;
             }
-
-            tentativas = 0;
+            LoadManagement.getInstance().fixing();
+            LoadManagement.getInstance().isSucess();
             return o;
 
         } catch (org.apache.http.NoHttpResponseException ex) {
-            ex.printStackTrace();
+            Message.printError("NoHttpResponseException: " + ex.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Message.printError(e.getMessage());
         }
         return null;
     }
@@ -91,10 +90,10 @@ public class RequestService {
         try {
             cost = json.getJSONObject("data").getJSONObject("rateLimit").getInt("cost");
             int remaining = json.getJSONObject("data").getJSONObject("rateLimit").getInt("remaining");
-            return remaining < cost;
+            return remaining < (cost*2);
         } catch (JSONException ex) {
-            Logger.getLogger(RequestService.class.getName()).log(Level.SEVERE, null, ex);
-            throw new JSONException("Rate limit not found.");
+            Message.printError(json.toString());
+            throw new JSONException("changing tokens...");
         }
 
     }

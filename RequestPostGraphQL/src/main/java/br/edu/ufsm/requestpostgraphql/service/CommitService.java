@@ -3,10 +3,10 @@ package br.edu.ufsm.requestpostgraphql.service;
 import br.edu.ufsm.requestpostgraphql.entity.Branch;
 import br.edu.ufsm.requestpostgraphql.entity.BranchCommit;
 import br.edu.ufsm.requestpostgraphql.entity.Commit;
+import br.edu.ufsm.requestpostgraphql.entity.Message;
 import br.edu.ufsm.requestpostgraphql.entity.Repository;
 import br.edu.ufsm.requestpostgraphql.repository.BranchRepository;
 import br.edu.ufsm.requestpostgraphql.repository.CommitRepository;
-import static java.lang.String.format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class CommitService {
                 sb.append("branch").append(n).append(": ref(qualifiedName: \\\"").append(branch.getName()).append("\\\") {name ");
                 sb.append("target {");
                 sb.append("... on Commit {");
-                sb.append("     history(first: 100").append(cursor).append(") { ");
+                sb.append("     history(first: ").append(LoadManagement.getInstance().getWeight()).append(cursor).append(") { ");
                 sb.append("totalCount ");
                 sb.append("nodes { ");
                 sb.append("id ");
@@ -67,7 +67,7 @@ public class CommitService {
                 sb.append(" } ");
                 sb.append("} ");
             }
-            if (n == 2) {
+            if (n == 10) {
                 break;
             }
         }
@@ -84,6 +84,10 @@ public class CommitService {
             if (jsonResponse != null) {
                 List<Commit> commits = getCommit(r, jsonResponse);
                 commitRepository.save(commits);
+            }
+            if(LoadManagement.getInstance().isBreak()){
+                Message.print("Break loading repository.");
+                return;
             }
             branchs = branchRepository.getBranchIncomplete(r);
         }
@@ -107,9 +111,8 @@ public class CommitService {
 
     public void getJsonCommit(JSONObject branchCommitJson, String indexBranch, Repository r, List lista) {
         try {
-            System.out.println(indexBranch);
             if (branchCommitJson.isNull((String) indexBranch)) {
-                System.out.println("Branch is null " + "(" + r.getOwner() + "/" + r.getName() + ")" + ".");
+                Message.print("Branch is null " + "(" + r.getOwner() + "/" + r.getName() + ")" + ".");
                 return;
             }
             System.out.println("(" + r.getOwner() + "/" + r.getName() + ") starting...");
@@ -167,11 +170,11 @@ public class CommitService {
             branch.setComplete(!hasNextPage);
             branch.setEndCursorCommit(endCursor);
             branchRepository.save(branch);
-            
-            System.out.println(branch.getName() + "(" + r.getOwner() + "/" + r.getName() + ") downloading...");
+            Message.print(branch.getName() + " (" + r.getOwner() + "/" + r.getName() + ") page complete...");
+            System.out.println();
 
         } catch (JSONException ex) {
-            System.out.println("Error in extract info " + "(" + r.getOwner() + "/" + r.getName() + "):" + ex);
+            Message.print("Error in extract info " + "(" + r.getOwner() + "/" + r.getName() + "):" + ex);
         }
     }
 
