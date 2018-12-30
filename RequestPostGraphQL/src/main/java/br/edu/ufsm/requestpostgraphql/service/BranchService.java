@@ -18,7 +18,7 @@ import org.json.JSONObject;
  */
 public class BranchService {
     BranchRepository repository = new BranchRepository();
-    RequestService requestService = new RequestService();
+    RequestService requestService = RequestService.getInstance();
     public void extractBranch(Repository r) {
         JSONObject jsonResponse = requestService.getHttpClient(getQuery(r));
         if (jsonResponse != null) {
@@ -44,7 +44,7 @@ public class BranchService {
         sb.append("      }");
         sb.append("    }");
         sb.append("  }");
-        sb.append("rateLimit {     limit     cost     remaining     resetAt   }");
+//        sb.append("rateLimit {     limit     cost     remaining     resetAt   }");
         sb.append("}");
         return "{\"query\": \"" + sb.toString() + "\"}";
     }

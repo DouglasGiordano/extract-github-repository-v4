@@ -55,6 +55,26 @@ public class BranchRepository {
         }
     }
 
+    public Branch getBranchDefault(Repository r) {
+        EntityManager manager = PersistenceGithub.openEntityManager();
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+
+        CriteriaQuery<Branch> q = cb.createQuery(Branch.class);
+        Root<Branch> c = q.from(Branch.class);
+        q.select(c);
+        Predicate ownerP = cb.equal(c.get("owner"), r.getOwner());
+        Predicate nameP = cb.equal(c.get("repository"), r.getName());
+        Predicate defaultRepository = cb.equal(c.get("defaultRepository"), true);
+        q.where(cb.and(ownerP, nameP, defaultRepository));
+        TypedQuery<Branch> query = manager.createQuery(q);
+        try {
+            Branch result = query.getSingleResult();
+            return result;
+        } catch (NoResultException ex) {
+            return null;
+        }
+    }
+    
     public boolean save(List<Branch> lista) {
         EntityManager manager = PersistenceGithub.openEntityManager();
         manager.getTransaction().begin();

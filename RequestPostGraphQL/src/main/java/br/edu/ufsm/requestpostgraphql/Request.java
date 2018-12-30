@@ -5,6 +5,7 @@
  */
 package br.edu.ufsm.requestpostgraphql;
 
+import br.edu.ufsm.requestpostgraphql.entity.Message;
 import br.edu.ufsm.requestpostgraphql.entity.Repository;
 import br.edu.ufsm.requestpostgraphql.service.BranchService;
 import br.edu.ufsm.requestpostgraphql.service.CommitService;
@@ -65,27 +66,42 @@ public class Request {
         }
     }
 
+    public void getRepositoriesCommitBranchDefault(List<Repository> repositories) throws JSONException {
+        for (Repository r : repositories) {
+            LoadManagement.getInstance().init();
+            System.out.println("Extract commit branch default " + r.getOwner() + " - " + r.getName());
+            commitService.extractCommitBranchDefault(r);
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         Request r = new Request();
         List<Repository> repositories = r.read();
         int option = 0;
         while (option != 4) {
             System.out.println("Digite: ");
-            System.out.println("1 - Issue e Pull | 2 - Branchs | 3 - Commits | 4 - Sair");
+            System.out.println("1 - Issue e Pull | 2 - Branchs | 3 - Commits | 4 - Commits Branch Default | 0 - Sair");
             Scanner reader = new Scanner(System.in);
             option = reader.nextInt();
-            switch (option) {
-                case 1:
-                    r.getRepositoriesIssuePull(repositories);
-                    break;
-                case 2:
-                    r.getRepositoriesBranch(repositories);
-                    break;
-                case 3:
-                    r.getRepositoriesCommit(repositories);
-                    break;
-                case 4:
-                    System.exit(1);
+            try {
+                switch (option) {
+                    case 1:
+                        r.getRepositoriesIssuePull(repositories);
+                        break;
+                    case 2:
+                        r.getRepositoriesBranch(repositories);
+                        break;
+                    case 3:
+                        r.getRepositoriesCommit(repositories);
+                        break;
+                    case 4:
+                        r.getRepositoriesCommitBranchDefault(repositories);
+                        break;
+                    case 0:
+                        System.exit(1);
+                }
+            } catch (org.hibernate.service.spi.ServiceException ex) {
+                Message.printError("Configuration is not working: " + ex.getMessage());
             }
         }
     }

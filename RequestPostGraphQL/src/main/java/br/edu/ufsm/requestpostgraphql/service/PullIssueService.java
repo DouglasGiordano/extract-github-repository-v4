@@ -16,7 +16,7 @@ import org.json.JSONObject;
  */
 public class PullIssueService {
 
-    private RequestService requestService = new RequestService();
+    private RequestService requestService = RequestService.getInstance();
     private IssueService issueService = new IssueService();
     private PullRequestService pullService = new PullRequestService();
     private StatusIssuePullRepository statusRepository = new StatusIssuePullRepository();

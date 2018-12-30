@@ -17,6 +17,7 @@ public class Repository {
     private String name;
     private String owner;
     private List<Complex> fields;
+    private Branch branchDefault;
 
     public Repository(String owner, String name) {
         this.name = name;

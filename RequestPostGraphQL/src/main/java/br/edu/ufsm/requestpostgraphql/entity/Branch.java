@@ -40,6 +40,7 @@ public class Branch implements Serializable {
     private String name;
     private String owner;
     private String repository;
+    private boolean defaultRepository;
     boolean complete;
     @Column(length = 10000)
     @Lob

@@ -1,5 +1,6 @@
 package br.edu.ufsm.requestpostgraphql.service;
 
+import br.edu.ufsm.requestpostgraphql.EnumTypeRequestCommit;
 import br.edu.ufsm.requestpostgraphql.entity.Branch;
 import br.edu.ufsm.requestpostgraphql.entity.BranchCommit;
 import br.edu.ufsm.requestpostgraphql.entity.Commit;
@@ -24,13 +25,13 @@ import org.json.JSONObject;
 public class CommitService {
 
     private CommitRepository commitRepository = new CommitRepository();
-    private RequestService requestService = new RequestService();
+    private RequestService requestService = RequestService.getInstance();
     private BranchService branchService = new BranchService();
     private BranchRepository branchRepository = new BranchRepository();
 
     public String getQuery(Repository r, List<Branch> branchs) {
         StringBuilder sb = new StringBuilder();
-        sb.append("query { ");
+        sb.append("query{");
         sb.append("repository(owner: \\\"").append(r.getOwner()).append("\\\", name: \\\"").append(r.getName()).append("\\\") {");
         int n = 0;
         for (Branch branch : branchs) {
@@ -43,8 +44,7 @@ public class CommitService {
                 sb.append("branch").append(n).append(": ref(qualifiedName: \\\"").append(branch.getName()).append("\\\") {name ");
                 sb.append("target {");
                 sb.append("... on Commit {");
-                sb.append("     history(first: ").append(LoadManagement.getInstance().getWeight()).append(cursor).append(") { ");
-                sb.append("totalCount ");
+                sb.append(" history(first: ").append(LoadManagement.getInstance().getWeight()).append(cursor).append("){ ");
                 sb.append("nodes { ");
                 sb.append("id ");
                 sb.append("additions ");
@@ -57,22 +57,65 @@ public class CommitService {
                 sb.append("url ");
                 sb.append("message ");
                 sb.append("author {name user{login}}");
-                sb.append("} ");
+                sb.append("}");
                 sb.append("pageInfo { ");
                 sb.append("hasNextPage ");
                 sb.append("endCursor ");
-                sb.append("} ");
-                sb.append("   } ");
-                sb.append("  } ");
-                sb.append(" } ");
-                sb.append("} ");
+                sb.append("}");
+                sb.append("}");
+                sb.append("}");
+                sb.append("}");
+                sb.append("}");
             }
             if (n == 10) {
                 break;
             }
         }
-        sb.append("  } ");
-        sb.append("rateLimit {     limit     cost     remaining     resetAt   }");
+        sb.append("}");
+        sb.append("rateLimit{ limit cost remaining resetAt}");
+        sb.append("}");
+        return "{\"query\" : \"" + sb.toString() + "\"}";
+    }
+
+    public String getQueryBranchDefault(Repository r) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("query{");
+        sb.append("repository(owner: \\\"").append(r.getOwner()).append("\\\", name: \\\"").append(r.getName()).append("\\\") {");
+        String cursor = "";
+        Branch branch = this.branchRepository.getBranchDefault(r);
+        if (branch != null && branch.getEndCursorCommit() != null) {
+            cursor = ", after: \\\"" + branch.getEndCursorCommit() + "\\\"";
+        }
+        if (branch == null || !branch.isComplete()) {
+            sb.append("defaultBranchRef{id name ");
+            sb.append("target {");
+            sb.append("... on Commit {");
+            sb.append(" history(first: ").append(LoadManagement.getInstance().getWeight()).append(cursor).append("){ ");
+            sb.append("nodes { ");
+            sb.append("id ");
+            sb.append("additions ");
+            sb.append("deletions ");
+            sb.append("changedFiles ");
+            sb.append("committer{name user{login}} ");
+            sb.append("authoredByCommitter ");
+            sb.append("authoredDate ");
+            sb.append("committedDate ");
+            sb.append("url ");
+            sb.append("message ");
+            sb.append("author {name user{login}}");
+            sb.append("}");
+            sb.append("pageInfo { ");
+            sb.append("hasNextPage ");
+            sb.append("endCursor ");
+            sb.append("}");
+            sb.append("}");
+            sb.append("}");
+            sb.append("}");
+            sb.append("}");
+        }
+
+        sb.append("}");
+        sb.append("rateLimit{ limit cost remaining resetAt}");
         sb.append("}");
         return "{\"query\" : \"" + sb.toString() + "\"}";
     }
@@ -85,11 +128,27 @@ public class CommitService {
                 List<Commit> commits = getCommit(r, jsonResponse);
                 commitRepository.save(commits);
             }
-            if(LoadManagement.getInstance().isBreak()){
+            if (LoadManagement.getInstance().isBreak()) {
                 Message.print("Break loading repository.");
                 return;
             }
             branchs = branchRepository.getBranchIncomplete(r);
+        }
+    }
+
+    public void extractCommitBranchDefault(Repository r) {
+        Branch branch = branchRepository.getBranchDefault(r);
+        while (branch == null || !branch.isComplete()) {
+            JSONObject jsonResponse = requestService.getHttpClient(getQueryBranchDefault(r));
+            if (jsonResponse != null) {
+                List<Commit> commits = getCommit(r, jsonResponse);
+                commitRepository.save(commits);
+            }
+            if (LoadManagement.getInstance().isBreak()) {
+                Message.print("Break loading repository.");
+                return;
+            }
+            branch = branchRepository.getBranchDefault(r);
         }
     }
 
@@ -103,7 +162,8 @@ public class CommitService {
             });
 
         } catch (JSONException ex) {
-            Logger.getLogger(CommitService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommitService.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         return lista;
@@ -115,11 +175,16 @@ public class CommitService {
                 Message.print("Branch is null " + "(" + r.getOwner() + "/" + r.getName() + ")" + ".");
                 return;
             }
-            System.out.println("(" + r.getOwner() + "/" + r.getName() + ") starting...");
+            System.out.println("(" + LoadManagement.getInstance().getWeight() + "-" + r.getOwner() + "/" + r.getName() + ") starting...");
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'");
             JSONObject branchJson;
             branchJson = branchCommitJson.getJSONObject((String) indexBranch);
             String nameBranch = branchJson.getString("name");
+            String idBranch = null;
+            if (!branchJson.isNull("id")) {
+                idBranch = branchJson.getString("id");
+            }
+
             JSONObject objectJson = branchJson.getJSONObject("target").getJSONObject("history");
 
             JSONArray jsoncommits = objectJson.getJSONArray("nodes");
@@ -127,6 +192,22 @@ public class CommitService {
             boolean hasNextPage = pageInfo.getBoolean("hasNextPage");
             String endCursor = pageInfo.getString("endCursor");
             Branch branch = branchRepository.getBranch(nameBranch, r);
+            if (idBranch != null || idBranch != "") {//use in branchs default
+                if (branch != null && !branch.isDefaultRepository() && branch.getEndCursorCommit() != null) {
+                    Message.printError("Repository default but not default in bd.");
+                    branch.setDefaultRepository(true);
+                    branchRepository.save(branch);
+                    return;
+                }
+                if (branch == null) {
+                    branch = new Branch();
+                    branch.setName(nameBranch);
+                    branch.setId(idBranch);
+                    branch.setDefaultRepository(true);
+                    branch.setOwner(r.getOwner());
+                    branch.setRepository(r.getName());
+                }
+            }
             for (int j = 0; j < jsoncommits.length(); j++) {
                 JSONObject jsoncommit = (JSONObject) jsoncommits.get(j);
                 Commit c = new Commit();
@@ -166,11 +247,10 @@ public class CommitService {
                 BranchCommit bc = new BranchCommit(branch, c);
                 branchRepository.save(bc);
             }
-
             branch.setComplete(!hasNextPage);
             branch.setEndCursorCommit(endCursor);
             branchRepository.save(branch);
-            Message.print(branch.getName() + " (" + r.getOwner() + "/" + r.getName() + ") page complete...");
+            Message.print(branch.getName() + " (" + LoadManagement.getInstance().getWeight() + "-" + r.getOwner() + "/" + r.getName() + ") page complete...");
             System.out.println();
 
         } catch (JSONException ex) {

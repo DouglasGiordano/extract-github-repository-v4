@@ -22,23 +22,40 @@ import org.json.JSONObject;
  */
 public class RequestService {
 
-    private final String[] tokens = {"",""};
     private int tokenNow = 1;
     private final String url = "https://api.github.com/graphql";
+    private static RequestService INSTANCE;
+    private CloseableHttpClient client;
+    private HttpPost post = new HttpPost(url);
 
-    public RequestService() {
+    private RequestService() {
         LoadManagement.getInstance().init();
     }
 
-    public JSONObject getHttpClient(String query) {
-        CloseableHttpClient client = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost(url);
+    public static RequestService getInstance() {
+        LoadManagement.getInstance().init();
+        if (INSTANCE == null) {
+            INSTANCE = new RequestService();
+            INSTANCE.init();
+        }
+        return INSTANCE;
+    }
 
-        // Create some NameValuePair for HttpPost parameters
+    public void init() {
+        client = HttpClientBuilder.create().build();
+        post = new HttpPost(url);
+    }
+
+    public Header[] getHeader() {
         Header header[] = new BasicHeader[2];
         header[0] = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json");
         header[1] = new BasicHeader("Authorization", "bearer " + tokens[tokenNow]);
-        post.setHeaders(header);
+        return header;
+    }
+
+    public JSONObject getHttpClient(String query) {
+        System.out.print("Request...");
+        post.setHeaders(this.getHeader());
         try {
             post.setEntity(new StringEntity(query));
             HttpResponse response = client.execute(post);
@@ -58,15 +75,17 @@ public class RequestService {
             } catch (JSONException ex) {
                 LoadManagement.getInstance().setHeavyLoad(true);
                 LoadManagement.getInstance().breaking();
-                Message.printError(jsonResponse.toString());
+                Message.printError(jsonResponse.toString().trim());
                 Message.printError("(" + LoadManagement.getInstance().getWeight() + ") decreasing weight...");
                 if (LoadManagement.getInstance().isHeavyLoad()) {
                     LoadManagement.getInstance().decrease();
                 }
+                System.out.println("..Complete");
                 return null;
             }
             LoadManagement.getInstance().fixing();
             LoadManagement.getInstance().isSucess();
+            System.out.println("..Complete");
             return o;
 
         } catch (org.apache.http.NoHttpResponseException ex) {
@@ -90,7 +109,7 @@ public class RequestService {
         try {
             cost = json.getJSONObject("data").getJSONObject("rateLimit").getInt("cost");
             int remaining = json.getJSONObject("data").getJSONObject("rateLimit").getInt("remaining");
-            return remaining < (cost*2);
+            return remaining < (cost * 2);
         } catch (JSONException ex) {
             Message.printError(json.toString());
             throw new JSONException("changing tokens...");
