@@ -2,6 +2,7 @@
  */
 package br.edu.ufsm.requestpostgraphql.entity;
 
+import br.edu.ufsm.requestpostgraphql.service.LoadManagement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,9 +42,9 @@ public class Complex {
     public String toString() {
         StringBuilder query = new StringBuilder();
         if (endCusor == null || endCusor.equalsIgnoreCase("")) {
-            query.append(name).append("(first: 100").append(") { ");
+            query.append(name).append("(first: ").append(LoadManagement.getInstance().getWeight()).append(") { ");
         } else {
-            query.append(name).append("(first: 100, after: \\\"" + endCusor + "\\\"").append(") { ");
+            query.append(name).append("(first: ").append(LoadManagement.getInstance().getWeight()).append(", after: \\\"" + endCusor + "\\\"").append(") { ");
         }
         query.append("totalCount edges { ");
         query.append(nameNode).append(": node {  ");

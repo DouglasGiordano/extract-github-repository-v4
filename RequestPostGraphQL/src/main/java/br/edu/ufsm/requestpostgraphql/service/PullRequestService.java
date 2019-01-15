@@ -41,6 +41,7 @@ public class PullRequestService {
                 pullObject.setCreatedAt(p.getString("createdAt"));
                 pullObject.setUpdatedAt(p.getString("updatedAt"));
                 pullObject.setUrl(p.getString("url"));
+                pullObject.setBodyHTML(p.getString("bodyHTML"));
                 if (!p.isNull("author")) {
                     pullObject.setAuthor(p.getJSONObject("author").getString("login"));
                 }
@@ -64,7 +65,7 @@ public class PullRequestService {
 
     public Complex getQuery(String cursor) {
         Complex c = new Complex("pullRequests", "pullRequest",
-                new String[]{"id", "number", "title", "createdAt", "updatedAt", "url"},
+                new String[]{"id", "number", "title", "createdAt", "updatedAt", "url", "bodyHTML"},
                 new Simple[]{new Simple("author", new String[]{"login"})});
         c.setComplex(new Complex[]{this.serviceComment.getQuery()});
         c.setEndCusor(cursor);

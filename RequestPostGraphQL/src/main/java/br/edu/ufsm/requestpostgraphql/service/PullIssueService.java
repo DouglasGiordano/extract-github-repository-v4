@@ -44,7 +44,7 @@ public class PullIssueService {
                     }
                     Message.print(" (" + r.getOwner() + "/" + r.getName() + ") page pull request complete...");
                 }
-                this.statusRepository.save(status);
+                status = this.statusRepository.save(status);
             }
             if (LoadManagement.getInstance().isBreak()) {
                 Message.print("Break loading repository.");

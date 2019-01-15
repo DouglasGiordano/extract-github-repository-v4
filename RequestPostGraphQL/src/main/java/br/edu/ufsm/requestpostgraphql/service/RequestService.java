@@ -22,6 +22,7 @@ import org.json.JSONObject;
  */
 public class RequestService {
 
+    private final String[] tokens = {"18bb88c0c03680b88a76c0b14f7ae3805e0a57b8", "69f09b980993df3d74ff2495d82fefcff94e3e76"};
     private int tokenNow = 1;
     private final String url = "https://api.github.com/graphql";
     private static RequestService INSTANCE;

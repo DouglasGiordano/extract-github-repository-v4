@@ -30,6 +30,8 @@ public class PullRequest implements Serializable {
     private String name;
     private String url;
     private int comments;
+    @Lob
+    private String bodyHTML;
 
 
     @Override

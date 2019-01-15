@@ -46,6 +46,7 @@ public class Request {
 
     public void getRepositoriesIssuePull(List<Repository> repositories) throws JSONException {
         for (Repository r : repositories) {
+            LoadManagement.getInstance().init();
             System.out.println("Extract pull and issues " + r.getOwner() + " - " + r.getName());
             pullIssueService.extractPullIssue(r);
         }
@@ -53,6 +54,7 @@ public class Request {
 
     public void getRepositoriesBranch(List<Repository> repositories) throws JSONException {
         for (Repository r : repositories) {
+            LoadManagement.getInstance().init();
             System.out.println("Extract branch " + r.getOwner() + " - " + r.getName());
             branchService.extractBranch(r);
         }

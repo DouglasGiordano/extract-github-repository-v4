@@ -1,4 +1,3 @@
-torvalds,linux
 odoo,odoo
 php,php-src
 python,cpython

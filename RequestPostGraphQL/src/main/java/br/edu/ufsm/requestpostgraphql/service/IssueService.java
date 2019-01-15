@@ -44,6 +44,7 @@ public class IssueService {
                 issue.setCreatedAt(objectJson.getString("createdAt"));
                 issue.setUpdatedAt(objectJson.getString("updatedAt"));
                 issue.setUrl(objectJson.getString("url"));
+                issue.setBodyHTML(objectJson.getString("bodyHTML"));
                 if (!objectJson.isNull("author")) {
                     issue.setAuthor(objectJson.getJSONObject("author").getString("login"));
                 }
@@ -66,7 +67,7 @@ public class IssueService {
 
     public Complex getQuery(String cursor) {
         Complex c = new Complex("issues", "issue",
-                new String[]{"id", "number", "title", "createdAt", "updatedAt", "url"},
+                new String[]{"id", "number", "title", "createdAt", "updatedAt", "url", "bodyHTML"},
                 new Simple[]{new Simple("author", new String[]{"login"})});
         c.setEndCusor(cursor);
         c.setComplex(new Complex[]{this.commentService.getQuery()});

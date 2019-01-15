@@ -38,7 +38,9 @@ public class Issue implements Serializable {
     private String name;
     private String url;
     private int comments;
-
+    @Lob
+    private String bodyHTML;
+    
     @Override
     public String toString() {
         return "Id: " + this.id + " number:" + this.number;
